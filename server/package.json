@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc",
-    "start": "node -r tsconfig-paths/register dist/server.js"
+    "start": "node -r tsconfig-paths/register dist/app.js"
   },
   "keywords": [],
   "author": "",
