@@ -18,4 +18,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-export default app;
+const port : number | string = process.env.PORT || 5000;
+
+app.listen(port,()=>console.log(`server started at port ${port}`));
