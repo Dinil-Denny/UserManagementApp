@@ -1,6 +1,6 @@
-import { UserEntity } from "entities/UserEntity";
-import {IUserRepository} from "../../interfaces/repository-interfaces/IUserRepository";
-import {UserModel} from "../../models/user/userSchema";
+import { UserEntity } from "@entities/UserEntity";
+import {IUserRepository} from "@interfaces/repository-interfaces/IUserRepository";
+import {UserModel} from "@models/user/userSchema";
 
 export class UserRepository implements IUserRepository{
 

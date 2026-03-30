@@ -1,7 +1,7 @@
-// for creating and configuring the Express app (middleware, routes)
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import userRoutes from '@routes/user/userRoutes';
 
 dotenv.config();
 
@@ -17,6 +17,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/',userRoutes);
 
 const port : number | string = process.env.PORT || 5000;
 
