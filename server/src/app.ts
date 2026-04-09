@@ -7,8 +7,10 @@ import userRoutes from '@routes/user/userRoutes';
 dotenv.config();
 
 const app = express();
+
 //DB connection
 connectDB();
+
 //middlewares
 app.use(
   cors({
