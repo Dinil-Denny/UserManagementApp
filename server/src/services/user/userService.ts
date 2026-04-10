@@ -1,8 +1,8 @@
-import { RegisterUserDTO, LoginUserDTO } from "@dtos/UserDTO";
-import { UserEntity } from "@entities/UserEntity";
-import { IUserRepository } from "@interfaces/repository-interfaces/IUserRepository";
-import { IUserService } from "@interfaces/service-interfaces/IUserService";
-
+import { resolve } from "node:dns";
+import { RegisterUserDTO, LoginUserDTO } from "../../dtos/UserDTO";
+import { UserEntity } from "../../entities/UserEntity";
+import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
+import { IUserService } from "../../interfaces/service-interfaces/IUserService";
 
 export class UserService implements IUserService{
     constructor(private userRepository: IUserRepository){};

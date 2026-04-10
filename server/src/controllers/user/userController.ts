@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { IUserService } from "@interfaces/service-interfaces/IUserService";
-import {RegisterUserDTO} from "@dtos/UserDTO";
+import { IUserService } from "../../interfaces/service-interfaces/IUserService";
+import {RegisterUserDTO} from "../../dtos/UserDTO";
 
 export class UserController{
     constructor(private userService : IUserService){};

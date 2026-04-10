@@ -57,23 +57,23 @@
     "strict": true,
 
     "types": ["node"],
-    "baseUrl": "./src",
+    // "baseUrl": "./src",
 
-    "paths": {
-      "@config/*": ["config/*"],
-      "@models/*": ["models/*"],
-      "@repositories/*": ["repositories/*"],
-      "@services/*": ["services/*"],
-      "@controllers/*": ["controllers/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@utils/*": ["utils/*"],
-      "@interfaces/*": ["interfaces/*"],
-      "@dtos/*": ["dtos/*"],
-      "@constants/*" : ["constants/*"],
-      "@di/*" : ["di/*"],
-      "@entities/*" : ["entities/*"],
-      "@routes/*" : ["routes/*"],
-    }
+    // "paths": {
+    //   "@config/*": ["config/*"],
+    //   "@models/*": ["models/*"],
+    //   "@repositories/*": ["repositories/*"],
+    //   "@services/*": ["services/*"],
+    //   "@controllers/*": ["controllers/*"],
+    //   "@middlewares/*": ["middlewares/*"],
+    //   "@utils/*": ["utils/*"],
+    //   "@interfaces/*": ["interfaces/*"],
+    //   "@dtos/*": ["dtos/*"],
+    //   "@constants/*" : ["constants/*"],
+    //   "@di/*" : ["di/*"],
+    //   "@entities/*" : ["entities/*"],
+    //   "@routes/*" : ["routes/*"],
+    // }
   },
   "include": ["src"],
   "exclude": ["node_modules"]
