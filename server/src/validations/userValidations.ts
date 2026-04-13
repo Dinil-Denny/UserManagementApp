@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 //user registration data validation schema
-const RegisterUserSchema = z.object({
+export const registerUserSchema = z.object({
     username : z.string().min(3,'Username must be at least 3 characters'),
     email : z.email('invalid email address'),
     password: z
@@ -14,7 +14,7 @@ const RegisterUserSchema = z.object({
 });
 
 //user login data validation schema
-const LoginUserSchema = z.object({
+export const loginUserSchema = z.object({
     email : z.email('invalid email address'),
     password: z
     .string()
@@ -25,5 +25,5 @@ const LoginUserSchema = z.object({
     .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
 })
 
-export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
-export type LoginUserInput = z.infer<typeof LoginUserSchema>;
+export type RegisterUserInput = z.infer<typeof registerUserSchema>;
+export type LoginUserInput = z.infer<typeof loginUserSchema>;

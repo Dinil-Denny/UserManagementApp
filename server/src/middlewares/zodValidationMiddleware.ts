@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ZodType, ZodError } from "zod";
 
 export const inputValidator = <T>(schema : ZodType<T>) => {
-    (req:Request,res:Response,next:NextFunction) => {
+    return (req:Request,res:Response,next:NextFunction) => {
         try {
             req.body = schema.parse(req.body);
             next();

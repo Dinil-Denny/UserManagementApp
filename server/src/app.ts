@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from '../src/config/db';
 import userRoutes from '../src/routes/user/userRoutes';
+import { errorMiddleware } from './middlewares/errorMiddleware';
 
 dotenv.config();
 
@@ -22,7 +23,10 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/',userRoutes);
+//error hanlding middleware
+app.use(errorMiddleware);
 
 const port : number | string = process.env.PORT || 5000;
 
