@@ -1,18 +1,17 @@
-import { useState } from "react";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
-import { Button, buttonVariants } from "@components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@components/ui/card";
+import { Outlet, useLocation } from "react-router-dom";
+import UserNavbar from "@components/userNavbar";
+import AdminNavbar from "@components/adminNavbar";
 
 function App() {
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/admin');
+
   return (
     <>
+      {isAdminPage ? <AdminNavbar/> : <UserNavbar/>}
+
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
@@ -25,22 +24,8 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <div>
-        <Button onClick={() => toast("Button clicked")}>
-          Toast a Notification
-        </Button>
-        <Card className="max-w-sm">
-          <CardHeader>
-            <CardTitle>Project Overview</CardTitle>
-            <CardDescription>
-              Track progress and recent activity for your Vite app.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Your design system is ready. Start building your next component.
-          </CardContent>
-        </Card>
-      </div>
+      
+      <Outlet/>
     </>
   );
 }
