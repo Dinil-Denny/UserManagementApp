@@ -13,12 +13,14 @@ import App from './App'
 //user pages
 import UserLogin from "./pages/user/userLogin";
 import UserRegister from '@pages/user/userRegister';
+import InputOTPForm from '@pages/user/otp';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App/>}> 
       <Route path='/login' element={<UserLogin/>}></Route>
       <Route path='/register' element={<UserRegister/>}></Route>
+      <Route path='/otp-verification' element={<InputOTPForm/>}></Route>
     </Route>
   )
 )
