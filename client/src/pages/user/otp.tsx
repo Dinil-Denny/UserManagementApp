@@ -33,10 +33,10 @@ const InputOTPForm = () => {
               <FieldLabel htmlFor="otp-verification">
                 Verification code
               </FieldLabel>
-              <Button variant="outline" size="xs">
+              {/* <Button variant="outline" size="xs" disabled>
                 <RefreshCwIcon />
                 Resend Code
-              </Button>
+              </Button> */}
             </div>
             <InputOTP maxLength={6} id="otp-verification" required>
               <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
@@ -57,6 +57,10 @@ const InputOTPForm = () => {
           <Field>
             <Button type="submit" className="w-full">
               Verify
+            </Button>
+            <Button variant="outline" size="xs" disabled>
+              <RefreshCwIcon />
+              Resend Code
             </Button>
           </Field>
         </CardFooter>
