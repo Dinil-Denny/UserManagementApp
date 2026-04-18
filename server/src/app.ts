@@ -28,6 +28,6 @@ app.use('/',userRoutes);
 //error hanlding middleware
 app.use(errorMiddleware);
 
-const port : number | string = process.env.PORT || 5000;
+const port : number | string = process.env.PORT || 3000;
 
 app.listen(port,()=>console.log(`server started at port ${port}`));

@@ -1,5 +1,5 @@
 import "./App.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { Outlet, useLocation } from "react-router-dom";
 import UserNavbar from "@components/userNavbar";
 import AdminNavbar from "@components/adminNavbar";
