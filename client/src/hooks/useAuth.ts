@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "@api/api";
-import { AppDispatch, RootState } from "store/store";
+import { AppDispatch, RootState } from "../store/store";
 import {
   setCredentials,
   logOut,
   setAuthError,
   setLoading,
-} from "store/slices/userAuthSlice";
-import { LoginUserInput, RegisterUserInput } from "schemas/authSchema";
+} from "../store/slices/userAuthSlice";
+import { LoginUserInput, RegisterUserInput } from "../schemas/authSchema";
 
 //Components should only focus on rendering.
 //  All logic related to authentication is placed here.

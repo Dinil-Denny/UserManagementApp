@@ -1,5 +1,5 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -7,33 +7,38 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import './index.css'
-import App from './App'
+import "./index.css";
+import App from "./App";
+import { store } from "./store/store";
+import { Provider } from "react-redux";
 
 //user pages
 import UserLogin from "./pages/user/userLogin";
-import UserRegister from '@pages/user/userRegister';
-import InputOTPForm from '@pages/user/otp';
+import UserRegister from "@pages/user/userRegister";
+import InputOTPForm from "@pages/user/otp";
 
 //admin pages
-import AdminLogin from '@pages/admin/adminLogin';
+import AdminLogin from "@pages/admin/adminLogin";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<App/>}> 
+    <Route path="/" element={<App />}>
       {/* ---------------user routes----------------- */}
-      <Route path='/login' element={<UserLogin/>}/>
-      <Route path='/register' element={<UserRegister/>}/>
-      <Route path='/otp-verification' element={<InputOTPForm/>}/>
+      <Route path="/login" element={<UserLogin />} />
+      <Route path="/register" element={<UserRegister />} />
+      <Route path="/otp-verification" element={<InputOTPForm />} />
 
       {/* ----------------admin routes----------------- */}
-      <Route path='/admin/login' element={<AdminLogin/>}/>
-    </Route>
-  )
-)
+      <Route path="/admin/login" element={<AdminLogin />} />
+    </Route>,
+  ),
+);
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
-)
+    {/* Providing Redux store to the entire app */}
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>,
+);

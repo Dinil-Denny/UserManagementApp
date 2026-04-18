@@ -1,6 +1,6 @@
 import axios from "axios";
 //importing store so we can attach the jwt token with requests send to server
-import { store } from "store/store";
+import { store } from "../store/store";
 
 //this is a single, configured instance of Axios for all requests.
 
