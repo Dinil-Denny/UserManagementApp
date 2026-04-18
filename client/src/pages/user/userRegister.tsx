@@ -1,3 +1,11 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@hooks/useAuth";
+import {
+  registerUserSchema,
+  RegisterUserInput,
+} from "../../schemas/authSchema";
+
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -13,6 +21,21 @@ import { Label } from "@components/ui/label";
 import { Link } from "react-router-dom";
 
 const UserRegister = () => {
+  //importing register logic from custom useAuth hook
+  const { handleRegister } = useAuth();
+  //React hook form setup with zod resolver
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUserInput>({
+    resolver: zodResolver(registerUserSchema),
+  });
+
+  const onSubmit = (data: RegisterUserInput) => {
+    handleRegister(data);
+  };
+
   return (
     <div className="h-screen flex items-center justify-center">
       <Card className="w-full max-w-sm">
@@ -23,7 +46,7 @@ const UserRegister = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)} id="register-form">
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Username</Label>
@@ -32,7 +55,13 @@ const UserRegister = () => {
                   type="text"
                   placeholder="enter username"
                   required
+                  {...register("username")}
                 />
+                {errors.username && (
+                  <p className="text-sm text-red-500">
+                    {errors.username.message}
+                  </p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -41,28 +70,60 @@ const UserRegister = () => {
                   type="email"
                   placeholder="m@example.com"
                   required
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Confirm Password</Label>
                 </div>
-                <Input id="confirmPassword" type="password" required />
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full cursor-pointer">
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            form="register-form"
+          >
             Create Account
           </Button>
-          <Button variant="outline" type="button" className="w-full cursor-pointer">
+          <Button
+            variant="outline"
+            type="button"
+            className="w-full cursor-pointer"
+          >
             Sign up with Google
           </Button>
         </CardFooter>
