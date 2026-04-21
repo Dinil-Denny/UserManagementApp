@@ -43,7 +43,11 @@ export class UserRepository implements IUserRepository {
   }
   //updating user document as verified
   async markAsVerified(email: string): Promise<void> {
-    await UserModel.findOneAndUpdate({ email }, { $set: { isVerified: true } });
-    console.log('marked as verified')
+    await UserModel.findOneAndUpdate(
+      { email },
+      { $set: { isVerified: true } },
+      { new: true },
+    );
+    console.log("marked as verified");
   }
 }

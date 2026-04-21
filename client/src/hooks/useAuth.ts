@@ -10,6 +10,7 @@ import {
   setLoading,
 } from "../store/slices/userAuthSlice";
 import { LoginUserInput, RegisterUserInput } from "../schemas/authSchema";
+import { email } from "zod";
 
 //Components should only focus on rendering.
 //  All logic related to authentication is placed here.
@@ -34,8 +35,14 @@ export const useAuth = () => {
       );
       //4.Toast and redirect
       toast.success("Login Successful");
-      navigate("/home");
+      navigate("/");
     } catch (err: any) {
+      if(err.response?.status === 403 || err.response?.data?.isVerified === false){
+        toast.info("Please verify your email first. A new OTP has been sent.");
+        navigate('/verify-otp');
+        localStorage.setItem('userEmail',data.email);
+        return;
+      }
       const message = err.response?.data?.message || "Login Failed";
       toast.error(message);
     } finally {
