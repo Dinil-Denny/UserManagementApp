@@ -1,5 +1,6 @@
 import { UserEntity } from "../../entities/UserEntity";
-import { RegisterUserDTO, OtpDTO } from "../../dtos/UserDTO";
+import { OtpEntity } from "../../entities/OtpEntity";
+import { RegisterUserDTO, OtpDTO, SaveOtpDTO } from "../../dtos/UserDTO";
 
 export interface IUserRepository {
   createUser(user: RegisterUserDTO): Promise<void>;
@@ -7,5 +8,8 @@ export interface IUserRepository {
   // findById(id:string) : Promise<UserEntity | null>;
   // deleteUser(id:string) : Promise<boolean>;
   // editDetails(id:string) : Promise<UserEntity>;
-  saveOtp(data: OtpDTO): Promise<void>;
+  saveOtp(data: SaveOtpDTO): Promise<void>;
+  findOtp(email:string) : Promise<OtpEntity | null>;
+  deleteOtp(email:string) : Promise<void>;
+  markAsVerified(email:string) : Promise<void>;
 }

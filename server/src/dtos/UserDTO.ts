@@ -9,8 +9,13 @@ export interface LoginUserDTO {
   password: string;
 }
 
-export interface OtpDTO {
+export interface SaveOtpDTO {
   email: string;
   otp: string;
   expiresAt: Date;
+}
+
+export interface OtpDTO{
+  email : string;
+  otp : string;
 }

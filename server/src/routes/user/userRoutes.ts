@@ -15,5 +15,6 @@ router.post(
 );
 router.post("/login", inputValidator(loginUserSchema), userController.login);
 router.post("/verify-otp", userController.verifyOtp);
+router.post('/resend-otp',userController.resendOtp);
 
 export default router;
