@@ -26,7 +26,7 @@ const router = createBrowserRouter(
       {/* ---------------user routes----------------- */}
       <Route path="/login" element={<UserLogin />} />
       <Route path="/register" element={<UserRegister />} />
-      <Route path="/otp-verification" element={<InputOTPForm />} />
+      <Route path="/verify-otp" element={<InputOTPForm />} />
 
       {/* ----------------admin routes----------------- */}
       <Route path="/admin/login" element={<AdminLogin />} />

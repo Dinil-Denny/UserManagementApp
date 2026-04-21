@@ -5,6 +5,7 @@ export const inputValidator = <T>(schema : ZodType<T>) => {
     return (req:Request,res:Response,next:NextFunction) => {
         try {
             req.body = schema.parse(req.body);
+            console.log('zod valid req.body:',req.body);
             next();
         } catch (error) {
             if(error instanceof ZodError){

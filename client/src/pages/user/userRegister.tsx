@@ -18,11 +18,12 @@ import {
 } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
+import { Spinner } from "@components/ui/spinner";
 import { Link } from "react-router-dom";
 
 const UserRegister = () => {
   //importing register logic from custom useAuth hook
-  const { handleRegister } = useAuth();
+  const { handleRegister, isLoading } = useAuth();
   //React hook form setup with zod resolver
   const {
     register,
@@ -33,7 +34,9 @@ const UserRegister = () => {
   });
 
   const onSubmit = (data: RegisterUserInput) => {
+    console.log("register data:", data);
     handleRegister(data);
+    localStorage.setItem("userEmail", data.email);
   };
 
   return (
@@ -117,7 +120,7 @@ const UserRegister = () => {
             className="w-full cursor-pointer"
             form="register-form"
           >
-            Create Account
+            {isLoading ? <Spinner /> : "Create Account"}
           </Button>
           <Button
             variant="outline"

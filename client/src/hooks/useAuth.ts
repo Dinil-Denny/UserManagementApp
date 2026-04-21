@@ -45,12 +45,25 @@ export const useAuth = () => {
 
   const handleRegister = async (data: RegisterUserInput) => {
     try {
+      console.log("handleRegister - useAuth:", data);
+      dispatch(setLoading(true));
       await api.post("/register", data);
+      console.log("1");
       toast.success("OTP send successfully");
-      navigate("/otp-verification");
+      console.log("2");
+
+      //setting resend otp timer to 1 minute. So after registering when otp input page come there will be a 1 min timer
+      //only completing the timer 'resend otp' button got enabled
+      const newExpiry = Date.now() + 60000;
+      localStorage.setItem("otpExpiry", newExpiry.toString());
+      
+      navigate("/verify-otp");
+      console.log("3");
     } catch (err: any) {
       const message = err.response?.data?.message || "Registration failed";
       toast.error(message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -60,5 +73,5 @@ export const useAuth = () => {
     toast.info("Logged out");
   };
 
-  return {...authState, handleLogin, handleRegister, handleLogout};
+  return { ...authState, handleLogin, handleRegister, handleLogout };
 };

@@ -1,11 +1,16 @@
-export interface RegisterUserDTO{
-    username : string;
-    email : string;
-    password : string;
-};
+export interface RegisterUserDTO {
+  username: string;
+  email: string;
+  password: string;
+}
 
-export interface LoginUserDTO{
-    email : string;
-    password : string;
-};
+export interface LoginUserDTO {
+  email: string;
+  password: string;
+}
 
+export interface OtpDTO {
+  email: string;
+  otp: string;
+  expiresAt: Date;
+}

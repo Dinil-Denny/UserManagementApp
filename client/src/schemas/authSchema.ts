@@ -43,7 +43,16 @@ export const loginUserSchema = z.object({
     .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
 });
 
+//otp validation schema
+export const otpSchema = z.object({
+  otp: z
+    .string()
+    .min(6, "OTP must be 6 digits")
+    .regex(/^\d+$/, "OTP must contain only numbers"),
+});
+
 // We infer the types directly from the schemas, ensuring a Single Source of Truth.
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
+export type OTPInput = z.infer<typeof otpSchema>;
