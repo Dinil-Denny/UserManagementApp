@@ -48,9 +48,11 @@ export class UserService implements IUserService {
     console.log("data-login service", data);
     const { email, password } = data;
     const userExist = await this.userRepository.findByEmail(email);
+    //if not email registered
     if (!userExist) {
       throw new AppError("Invalid credentials", 401);
     };
+    //if user's email is not verified
     if (!userExist.isVerified) {
       const otp: string = generateOTP(); //generate otp
       const otpData = {
@@ -63,6 +65,13 @@ export class UserService implements IUserService {
       await sendOtpEmail(otp, email); //sending mail with otp
       throw new AppError("Account not verified. A new OTP has been sent to your email.", 403);
     };
+    //comapring password
+    const passMatch = await bcrypt.compare(password,userExist.password);
+    //if passwords don't match
+    if(!passMatch){
+        throw new AppError('Invalid credentials',401);
+    };
+    
   }
 
   async verifyOtp(data: OtpDTO): Promise<OtpEntity> {

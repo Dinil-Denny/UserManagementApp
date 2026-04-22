@@ -10,7 +10,6 @@ import {
   setLoading,
 } from "../store/slices/userAuthSlice";
 import { LoginUserInput, RegisterUserInput } from "../schemas/authSchema";
-import { email } from "zod";
 
 //Components should only focus on rendering.
 //  All logic related to authentication is placed here.
