@@ -15,7 +15,12 @@ export interface SaveOtpDTO {
   expiresAt: Date;
 }
 
-export interface OtpDTO{
-  email : string;
-  otp : string;
+export interface OtpDTO {
+  email: string;
+  otp: string;
+}
+
+export interface RefreshTokenDTO {
+  id: string | undefined;
+  token: string;
 }

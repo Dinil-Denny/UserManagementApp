@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from '../src/config/db';
 import userRoutes from '../src/routes/user/userRoutes';
 import { errorMiddleware } from './middlewares/errorMiddleware';
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use('/',userRoutes);
 //error hanlding middleware

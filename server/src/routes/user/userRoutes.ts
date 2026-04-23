@@ -5,12 +5,19 @@ import {
   registerUserSchema,
   loginUserSchema,
 } from "../../validations/userValidations";
+import { authMiddleware } from "../../middlewares/authMiddleware";
 
 const router = Router();
 
-router.post("/register", inputValidator(registerUserSchema), userController.register);
+router.post(
+  "/register",
+  inputValidator(registerUserSchema),
+  userController.register,
+);
 router.post("/login", inputValidator(loginUserSchema), userController.login);
+router.post("/logout", authMiddleware, userController.logout);
 router.post("/verify-otp", userController.verifyOtp);
-router.post('/resend-otp',userController.resendOtp);
+router.post("/resend-otp", userController.resendOtp);
+router.post("/auth-refresh", userController.refreshAccessToken);
 
 export default router;

@@ -7,7 +7,7 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.error(err);
+  console.error("Error middleware - ",err);
   if (res.headersSent) {
     return next(err);
   }
@@ -17,7 +17,7 @@ export const errorMiddleware = (
       .status(err.statusCode)
       .json({
         message: err.message,
-        isVerified: err.statusCode === 403 ? false : undefined,
+        errorCode: err.errorCode,
       });
   }
 

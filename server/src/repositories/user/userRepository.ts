@@ -8,9 +8,11 @@ import {
   LoginUserDTO,
   OtpDTO,
   SaveOtpDTO,
+  RefreshTokenDTO
 } from "../../dtos/UserDTO";
 
 export class UserRepository implements IUserRepository {
+
   //creating user document
   async createUser(user: RegisterUserDTO): Promise<void> {
     console.log("user:", user);
@@ -18,6 +20,7 @@ export class UserRepository implements IUserRepository {
     console.log("user created - repository");
     //return new UserEntity(createdUser.id, createdUser.email, createdUser.password, createdUser.role, createdUser.isBlocked, createdUser.createdAt);
   }
+
   //find a document by email
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await UserModel.findOne({ email: email });
@@ -26,21 +29,31 @@ export class UserRepository implements IUserRepository {
     }
     return user as UserEntity;
   }
+
+  async findById(id:string): Promise<UserEntity | null>{
+    const user = await UserModel.findById(id);
+    if(!user) return null;
+    return user as UserEntity;
+  }
+
   //saving otp document
   async saveOtp(otpData: SaveOtpDTO): Promise<void> {
     await OtpModel.create(otpData);
     console.log("otp doc created - repository");
   }
+
   //finding otp document
   async findOtp(email: string): Promise<OtpEntity | null> {
     const otp = await OtpModel.findOne({ email: email });
     if (!otp) return null;
     return otp as OtpEntity;
   }
+
   //deleting the otp document
   async deleteOtp(email: string): Promise<void> {
     await OtpModel.findOneAndDelete({ email: email });
   }
+
   //updating user document as verified
   async markAsVerified(email: string): Promise<void> {
     await UserModel.findOneAndUpdate(
@@ -50,4 +63,22 @@ export class UserRepository implements IUserRepository {
     );
     console.log("marked as verified");
   }
+
+  //Storeing refresh token in the DB to track active sessions
+  async updateRefreshToken(data:RefreshTokenDTO):Promise<UserEntity | null>{
+    return await UserModel.findByIdAndUpdate(data.id,{refreshToken:data.token},{new:true});
+  };
+
+  //remove refresh token while logout
+  async removeRefreshToken(token:string):Promise<void>{
+    console.log('removing refreshToken in DB - repository')
+    await UserModel.findOneAndUpdate({refreshToken:token},{$set:{refreshToken:''}},{new:true});
+  };
+
+  //checking for refresh token
+  async tokenExist(id: string): Promise<string | null> {
+    const user:UserEntity | null = await UserModel.findById(id);
+    return user?.refreshToken?.toString() ?? null;
+  };
+
 }

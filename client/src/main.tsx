@@ -15,6 +15,7 @@ import { Provider } from "react-redux";
 //user pages
 import UserPrivateRoute from "@components/auth/userPrivateRoute";
 
+import Home from "@pages/user/home";
 import UserLogin from "./pages/user/userLogin";
 import UserRegister from "@pages/user/userRegister";
 import InputOTPForm from "@pages/user/otp";
@@ -30,8 +31,8 @@ const router = createBrowserRouter(
       <Route path="/register" element={<UserRegister />} />
       <Route path="/verify-otp" element={<InputOTPForm />} />
       {/* ------------private routes--------------- */}
-      <Route path="" element={<UserPrivateRoute/>}>
-        
+      <Route element={<UserPrivateRoute/>}>
+        <Route index={true} path="/" element={<Home/>}/>
       </Route>
 
       {/* ----------------admin routes----------------- */}

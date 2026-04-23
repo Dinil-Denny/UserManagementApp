@@ -3,6 +3,7 @@ import {
   LoginUserDTO,
   OtpDTO,
   SaveOtpDTO,
+  RefreshTokenDTO,
 } from "../../dtos/UserDTO";
 import { UserEntity } from "../../entities/UserEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
@@ -12,6 +13,11 @@ import { generateOTP } from "../../utils/generateOTP";
 import bcrypt from "bcrypt";
 import sendOtpEmail from "../../utils/sendEmail";
 import { OtpEntity } from "../../entities/OtpEntity";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class UserService implements IUserService {
   constructor(private userRepository: IUserRepository) {}
@@ -45,13 +51,14 @@ export class UserService implements IUserService {
   }
 
   async userLogin(data: LoginUserDTO): Promise<any> {
-    console.log("data-login service", data);
+    console.log("login data - service", data);
     const { email, password } = data;
     const userExist = await this.userRepository.findByEmail(email);
+    console.log("userExist :", userExist);
     //if not email registered
     if (!userExist) {
       throw new AppError("Invalid credentials", 401);
-    };
+    }
     //if user's email is not verified
     if (!userExist.isVerified) {
       const otp: string = generateOTP(); //generate otp
@@ -63,15 +70,43 @@ export class UserService implements IUserService {
       //saving otp document in DB
       await this.userRepository.saveOtp(otpData);
       await sendOtpEmail(otp, email); //sending mail with otp
-      throw new AppError("Account not verified. A new OTP has been sent to your email.", 403);
-    };
+      throw new AppError(
+        "Account not verified. A new OTP has been sent to your email.",
+        403,
+        "USER_NOT_VERIFIED",
+      );
+    }
+    //throw error if user is blocked
+    if (userExist.isBlocked) {
+      throw new AppError("Account blocked", 403);
+    }
     //comapring password
-    const passMatch = await bcrypt.compare(password,userExist.password);
+    const passMatch = await bcrypt.compare(password, userExist.password);
     //if passwords don't match
-    if(!passMatch){
-        throw new AppError('Invalid credentials',401);
+    if (!passMatch) {
+      throw new AppError("Invalid credentials", 401);
+    }
+    //generate access token and refresh token
+    const accessToken = generateAccessToken({
+      id: userExist.id,
+      role: userExist.role,
+    });
+    const refreshToken = generateRefreshToken(userExist.id);
+    //update the refresh token in db
+    const refreshTokenUpdateData: RefreshTokenDTO = {
+      id: userExist.id,
+      token: refreshToken,
     };
-    
+    const user = await this.userRepository.updateRefreshToken(
+      refreshTokenUpdateData,
+    );
+    console.log(
+      "user,accesstoken,refreshtoken - service:",
+      user,
+      accessToken,
+      refreshToken,
+    );
+    return { user, accessToken, refreshToken };
   }
 
   async verifyOtp(data: OtpDTO): Promise<OtpEntity> {
@@ -111,5 +146,28 @@ export class UserService implements IUserService {
     console.log("otp done - service");
     await sendOtpEmail(otp, email); //sending mail with otp
     console.log("mail send - service");
+  }
+
+  async userLogout(refreshToken: string): Promise<void> {
+    await this.userRepository.removeRefreshToken(refreshToken);
+    console.log("removed refreshToken in DB - service");
+  }
+
+  async recreateAccessToken(refreshToken: string): Promise<string> {
+    //decode the refresh token to get user id
+    const decode: { id: string } = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!,
+    ) as { id: string };
+    const userExist = await this.userRepository.findById(decode.id);
+    if (!userExist?.refreshToken) {
+      throw new AppError("Refresh token revoked or invalid", 401);
+    }
+    //generate access token and refresh token
+    const newAccessToken = generateAccessToken({
+      id: userExist.id,
+      role: userExist.role,
+    });
+    return newAccessToken;
   }
 }
