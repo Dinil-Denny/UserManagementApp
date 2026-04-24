@@ -91,8 +91,8 @@ const ResetPasswordInputOTPForm = () => {
       console.log('otp verfication response-',response);
       toast.success("Email verified successfully!");
       localStorage.removeItem("otpExpiry"); // Clean up on success
-      localStorage.removeItem("userEmail");
-      navigate("/login"); //--------change
+      // localStorage.removeItem("userEmail");
+      navigate("/reset-password");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Invalid OTP");
     } finally {

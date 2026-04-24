@@ -42,7 +42,7 @@ const ForgotPasswordDialog = () => {
     try {
       //set email to local storage
       localStorage.setItem("userEmail", value.email);
-      await api.post("/reset-password", { email: value.email });
+      await api.post("/reset-password-otp", { email: value.email });
       toast.success("OTP send to email");
 
       // Close the dialog

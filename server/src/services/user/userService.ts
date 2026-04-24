@@ -4,6 +4,7 @@ import {
   OtpDTO,
   SaveOtpDTO,
   RefreshTokenDTO,
+  ResetPassDTO,
 } from "../../dtos/UserDTO";
 import { UserEntity } from "../../entities/UserEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
@@ -109,6 +110,11 @@ export class UserService implements IUserService {
     return { user, accessToken, refreshToken };
   }
 
+  async userLogout(refreshToken: string): Promise<void> {
+    await this.userRepository.removeRefreshToken(refreshToken);
+    console.log("removed refreshToken in DB - service");
+  }
+
   async verifyOtp(data: OtpDTO): Promise<OtpEntity> {
     const { otp, email } = data;
     console.log("otp,email-verify otp service", otp, email);
@@ -130,14 +136,27 @@ export class UserService implements IUserService {
   async resetPasswordVerifyOtp(data: OtpDTO): Promise<void> {
     //1.check if a user with this email exist
     const { otp, email } = data;
+    console.log('otp & email in resetPasswordVerifyOtp - service:',otp,email)
     const userExist = await this.userRepository.findByEmail(email);
+    console.log('userExists:',userExist);
     if (!userExist) throw new AppError("User does not exist!", 404);
     //2.check if otp exist in otp db
     const otpExist = await this.userRepository.findOtp(email);
     if (!otpExist) throw new AppError("OTP not found", 404);
     //3.validate otp
-    if (otp === otpExist.otp) return;
-    else throw new AppError("Invalid OTP", 401);
+    if (otp !== otpExist.otp){
+      throw new AppError("Invalid OTP", 401);
+    };
+    console.log(`otp:${otp}, otp in db:${otpExist.otp} - resetPasswordVerifyOtp service`);
+  }
+
+  async resetPassword(data: ResetPassDTO): Promise<void> {
+    const { email, password } = data;
+    const userExist = await this.userRepository.findByEmail(email);
+    //console.log('userExist:',userExist);
+    if (!userExist) throw new AppError("User not found", 404);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await this.userRepository.updatePassword({email:email,password:hashedPassword});
   }
 
   async reSendOtp(email: string): Promise<void> {
@@ -159,11 +178,6 @@ export class UserService implements IUserService {
     console.log("otp done - service");
     await sendOtpEmail(otp, email); //sending mail with otp
     console.log("mail send - service");
-  }
-
-  async userLogout(refreshToken: string): Promise<void> {
-    await this.userRepository.removeRefreshToken(refreshToken);
-    console.log("removed refreshToken in DB - service");
   }
 
   async recreateAccessToken(refreshToken: string): Promise<string> {

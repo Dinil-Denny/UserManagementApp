@@ -1,4 +1,4 @@
-import { LoginUserDTO, RegisterUserDTO, OtpDTO } from "../../dtos/UserDTO";
+import { LoginUserDTO, RegisterUserDTO, OtpDTO, ResetPassDTO } from "../../dtos/UserDTO";
 import { OtpEntity } from "../../entities/OtpEntity";
 import { UserEntity } from "../../entities/UserEntity";
 
@@ -10,4 +10,5 @@ export interface IUserService {
   reSendOtp(email: string): Promise<void>;
   recreateAccessToken(token: string): Promise<string>;
   resetPasswordVerifyOtp(data: OtpDTO): Promise<void>;
+  resetPassword(data:ResetPassDTO): Promise<void>;
 }

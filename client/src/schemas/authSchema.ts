@@ -12,19 +12,13 @@ export const registerUserSchema = z
       .min(6, "Password must be at least 6 characters")
       // Use regex to check for capital, number, and special character
       .regex(/[A-Z]/, "Password must contain at least one capital letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[^a-zA-Z0-9]/,
-        "Password must contain at least one special symbol",
-      ),
+      .regex(/[0-9]/, "Password must contain at least one number"),
+    //.regex( /[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
     confirmPassword: z
       .string()
       .regex(/[A-Z]/, "Password must contain at least one capital letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[^a-zA-Z0-9]/,
-        "Password must contain at least one special symbol",
-      ),
+      .regex(/[0-9]/, "Password must contain at least one number"),
+    //.regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: `Passwords don't match`,
@@ -39,8 +33,8 @@ export const loginUserSchema = z.object({
     .min(6, "Password must be at least 6 characters")
     // Use regex to check for capital, number, and special character
     .regex(/[A-Z]/, "Password must contain at least one capital letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
+    .regex(/[0-9]/, "Password must contain at least one number"),
+  //.regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
 });
 
 //otp validation schema
@@ -53,8 +47,28 @@ export const otpSchema = z.object({
 
 //email verification schema for reset password
 export const emailSchema = z.object({
-  email : z.email('Invalid email address'),
-})
+  email: z.email("Invalid email address"),
+});
+
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      // Use regex to check for capital, number, and special character
+      .regex(/[A-Z]/, "Password must contain at least one capital letter")
+      .regex(/[0-9]/, "Password must contain at least one number"),
+    //.regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
+    confirmPassword: z
+      .string()
+      .regex(/[A-Z]/, "Password must contain at least one capital letter")
+      .regex(/[0-9]/, "Password must contain at least one number"),
+    //.regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: `Passwords don't match`,
+    path: ["confirmPassword"],
+  });
 
 // We infer the types directly from the schemas, ensuring a Single Source of Truth.
 
@@ -62,3 +76,4 @@ export type RegisterUserInput = z.infer<typeof registerUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
 export type OTPInput = z.infer<typeof otpSchema>;
 export type EmailInput = z.infer<typeof emailSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

@@ -31,9 +31,16 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    //Identify routes that should NOT trigger a redirect to login
+    const isOTPRoute = originalRequest.url.includes("/resetPassword-verify-otp");
+
     // Check if the error is 401 AND we haven't already retried this exact request
     if (error.response?.status === 401 && !originalRequest._retry) {
       // Prevent infinite loops if the refresh route itself fails
+
+      if (isOTPRoute) {
+        return Promise.reject(error); 
+      }
 
       if (originalRequest.url === "/auth-refresh") {
         return Promise.reject(error);

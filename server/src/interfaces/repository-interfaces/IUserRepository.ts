@@ -5,6 +5,7 @@ import {
   OtpDTO,
   SaveOtpDTO,
   RefreshTokenDTO,
+  ResetPassDTO,
 } from "../../dtos/UserDTO";
 
 export interface IUserRepository {
@@ -20,4 +21,5 @@ export interface IUserRepository {
   updateRefreshToken(data: RefreshTokenDTO): Promise<UserEntity | null>;
   removeRefreshToken(token: string): Promise<void>;
   tokenExist(id: string): Promise<string | null>;
+  updatePassword(data: ResetPassDTO): Promise<void>;
 }

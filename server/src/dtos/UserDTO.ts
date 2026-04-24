@@ -24,3 +24,8 @@ export interface RefreshTokenDTO {
   id: string | undefined;
   token: string;
 }
+
+export interface ResetPassDTO {
+  email: string;
+  password: string;
+}

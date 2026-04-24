@@ -3,7 +3,7 @@ import { Button } from "@components/ui/button";
 import { ArrowRight } from "lucide-react"; 
 import { store } from "../../store/store";
 
-const user = store.getState().userAuth.user;
+
 
 type HeroSectionProps = {
   title?: string;
@@ -18,7 +18,7 @@ type HeroSectionProps = {
 };
 
 const Home = ({
-  title = `HEY, ${user?.username ? user.username : 'Guest'}`,
+  // title = `HEY, ${user?.username ? user.username : 'Guest'}`,
   subtitle = "How are you doing",
   primaryLabel = "Get Started",
   secondaryLabel = "Learn More",
@@ -27,6 +27,10 @@ const Home = ({
   className = "",
   heroImageSrc = "/tom_and_Jerry.png",
 }: HeroSectionProps) => {
+  
+  const user = store.getState().userAuth.user;
+  const title = `HEY, ${user?.username ? user.username : 'Guest'}`;
+
   return (
     <section
       className={`relative overflow-hidden bg-background px-4 sm:px-6 lg:px-8 min-h-[calc(100dvh-65px)] flex items-center ${className}`}

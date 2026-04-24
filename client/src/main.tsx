@@ -20,6 +20,7 @@ import UserLogin from "./pages/user/userLogin";
 import UserRegister from "@pages/user/userRegister";
 import InputOTPForm from "@pages/user/otp";
 import ResetPasswordInputOTPForm from "@pages/user/resetPasswordOTP";
+import ResetPassword from "@pages/user/resetPassword";
 
 //admin pages
 import AdminLogin from "@pages/admin/adminLogin";
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path="/register" element={<UserRegister />} />
       <Route path="/verify-otp" element={<InputOTPForm />} />
       <Route path="/reset-pass-verify-otp" element={<ResetPasswordInputOTPForm/>}/>
+      <Route path="/reset-password" element={<ResetPassword/>}/>
       {/* ------------private routes--------------- */}
       <Route element={<UserPrivateRoute/>}>
         <Route index={true} path="/" element={<Home/>}/>

@@ -46,20 +46,18 @@ export class UserController {
         userData.user.email,
         userData.user.role,
       );
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Login successful",
-          accessToken,
-          user: {
-            id: userData.user._id,
-            username: userData.user.username,
-            email: userData.user.email,
-            role: userData.user.role,
-            profileImgURL: userData.user.profileImgURL,
-          },
-        });
+      res.status(200).json({
+        success: true,
+        message: "Login successful",
+        accessToken,
+        user: {
+          id: userData.user._id,
+          username: userData.user.username,
+          email: userData.user.email,
+          role: userData.user.role,
+          profileImgURL: userData.user.profileImgURL,
+        },
+      });
     } catch (error) {
       next(error);
     }
@@ -67,19 +65,19 @@ export class UserController {
 
   logout = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      console.log('req.cookies - logout controller: ',req.cookies);
+      console.log("req.cookies - logout controller: ", req.cookies);
       const refreshToken = req.cookies.refreshToken;
-      console.log('refreshToken - logout controller:',refreshToken);
-      if(refreshToken){
+      console.log("refreshToken - logout controller:", refreshToken);
+      if (refreshToken) {
         await this.userService.userLogout(refreshToken);
       }
       res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: 'lax'
+        sameSite: "lax",
       });
-      console.log('cleared refreshToken-controller');
-      res.status(200).json({message:'Logged out successfully'});
+      console.log("cleared refreshToken-controller");
+      res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
       next(error);
     }
@@ -97,24 +95,38 @@ export class UserController {
     }
   };
 
-  resetPassVerifyOtp = async (req:Request,res:Response,next:NextFunction) => {
+  resetPassVerifyOtp = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const {otp,email} = req.body;
-      console.log('otp,email: - reset pass otp controller:',otp,email);
-      await this.userService.resetPasswordVerifyOtp({email,otp});
-      console.log('reset pass otp verified');
-      return res.status(200).json({message:"OTP verified"});
+      const { otp, email } = req.body;
+      console.log("otp,email: - reset pass otp controller:", otp, email);
+      await this.userService.resetPasswordVerifyOtp({ email, otp });
+      console.log("reset pass otp verified");
+      return res.status(200).json({ message: "OTP verified" });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   resendOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
-      console.log('email - resend otp:',email);
+      console.log("email - resend otp:", email);
       await this.userService.reSendOtp(email);
       res.status(200).json({ message: "OTP resend successfully" });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body;
+      await this.userService.resetPassword({ email, password });
+      res.status(200).json({message:"Password reset successful. Please login again."});
     } catch (error) {
       next(error);
     }
@@ -126,19 +138,24 @@ export class UserController {
   //   } catch (error) {
   //     next(error);
   //   }
-  // } 
+  // }
 
-  refreshAccessToken = async (req:Request,res:Response,next:NextFunction) => {
+  refreshAccessToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      console.log('refreshAccessToken automatically called - controller');
+      console.log("refreshAccessToken automatically called - controller");
       const currentRefreshToken = req.cookies.refreshToken;
-      if(!currentRefreshToken){
-        return res.status(401).json({ message: 'No refresh token provided.' });
-      };
-      const newAccessToken:string = await this.userService.recreateAccessToken(currentRefreshToken);
+      if (!currentRefreshToken) {
+        return res.status(401).json({ message: "No refresh token provided." });
+      }
+      const newAccessToken: string =
+        await this.userService.recreateAccessToken(currentRefreshToken);
       res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
