@@ -51,8 +51,14 @@ export const otpSchema = z.object({
     .regex(/^\d+$/, "OTP must contain only numbers"),
 });
 
+//email verification schema for reset password
+export const emailSchema = z.object({
+  email : z.email('Invalid email address'),
+})
+
 // We infer the types directly from the schemas, ensuring a Single Source of Truth.
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
 export type OTPInput = z.infer<typeof otpSchema>;
+export type EmailInput = z.infer<typeof emailSchema>;

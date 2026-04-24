@@ -8,5 +8,6 @@ export interface IUserService {
   registerUser(data: RegisterUserDTO): Promise<UserEntity | null | void>;
   verifyOtp(data: OtpDTO): Promise<OtpEntity>;
   reSendOtp(email: string): Promise<void>;
-  recreateAccessToken(token:string):Promise<string>;
+  recreateAccessToken(token: string): Promise<string>;
+  resetPasswordVerifyOtp(data: OtpDTO): Promise<void>;
 }

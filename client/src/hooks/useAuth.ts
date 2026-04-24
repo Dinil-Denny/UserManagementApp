@@ -33,7 +33,6 @@ export const useAuth = () => {
       //only completing the timer 'resend otp' button got enabled
       const newExpiry = Date.now() + 60000;
       localStorage.setItem("otpExpiry", newExpiry.toString());
-
       navigate("/verify-otp");
       console.log("3");
     } catch (err: any) {

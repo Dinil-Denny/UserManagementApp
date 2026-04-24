@@ -88,7 +88,7 @@ export class UserController {
   verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let { otp, email } = req.body;
-      console.log("verify otp - controller", otp, email);
+      console.log("verify otp, otp & email - controller", otp, email);
       const otpData = await this.userService.verifyOtp({ otp, email });
       console.log("otpData - controller:", otpData);
       res.status(200).json({ message: "OTP verified" });
@@ -97,15 +97,36 @@ export class UserController {
     }
   };
 
+  resetPassVerifyOtp = async (req:Request,res:Response,next:NextFunction) => {
+    try {
+      const {otp,email} = req.body;
+      console.log('otp,email: - reset pass otp controller:',otp,email);
+      await this.userService.resetPasswordVerifyOtp({email,otp});
+      console.log('reset pass otp verified');
+      return res.status(200).json({message:"OTP verified"});
+    } catch (error) {
+      next(error);
+    }
+  }
+
   resendOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
+      console.log('email - resend otp:',email);
       await this.userService.reSendOtp(email);
-      res.status(200).json({ message: "OTP resend successful" });
+      res.status(200).json({ message: "OTP resend successfully" });
     } catch (error) {
       next(error);
     }
   };
+
+  // resetPasswordOtp = async(req:Request,res:Response,next:NextFunction) => {
+  //   try {
+  //     const {email} = req.body;
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // } 
 
   refreshAccessToken = async (req:Request,res:Response,next:NextFunction) => {
     try {

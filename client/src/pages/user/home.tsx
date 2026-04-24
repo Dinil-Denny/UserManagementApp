@@ -18,7 +18,7 @@ type HeroSectionProps = {
 };
 
 const Home = ({
-  title = `HEY, ${user?.username}`,
+  title = `HEY, ${user?.username ? user.username : 'Guest'}`,
   subtitle = "How are you doing",
   primaryLabel = "Get Started",
   secondaryLabel = "Learn More",

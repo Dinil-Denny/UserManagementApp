@@ -114,7 +114,7 @@ export class UserService implements IUserService {
     console.log("otp,email-verify otp service", otp, email);
     const otpExists = await this.userRepository.findOtp(email);
     if (!otpExists) {
-      throw new AppError("OTP Expired", 404);
+      throw new AppError("OTP not found", 404);
     }
     if (otp !== otpExists.otp) {
       throw new AppError("Invalid OTP", 401);
@@ -125,6 +125,19 @@ export class UserService implements IUserService {
       await this.userRepository.deleteOtp(email);
       return otpExists;
     }
+  }
+
+  async resetPasswordVerifyOtp(data: OtpDTO): Promise<void> {
+    //1.check if a user with this email exist
+    const { otp, email } = data;
+    const userExist = await this.userRepository.findByEmail(email);
+    if (!userExist) throw new AppError("User does not exist!", 404);
+    //2.check if otp exist in otp db
+    const otpExist = await this.userRepository.findOtp(email);
+    if (!otpExist) throw new AppError("OTP not found", 404);
+    //3.validate otp
+    if (otp === otpExist.otp) return;
+    else throw new AppError("Invalid OTP", 401);
   }
 
   async reSendOtp(email: string): Promise<void> {

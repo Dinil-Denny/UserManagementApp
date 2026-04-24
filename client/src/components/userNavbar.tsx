@@ -10,12 +10,12 @@ const UserNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const user = store.getState().userAuth.user;
-  console.log('user in navbar: ',user);
-  
+  console.log("user in navbar: ", user);
+
   // const profileImgFallBack = user.username;
   // console.log('profileImgFallBack-',profileImgFallBack)
 
-  const {handleLogout} = useAuth();
+  const { handleLogout } = useAuth();
 
   // 👉 Replace this with real auth logic later
   const token = localStorage.getItem("token");
@@ -46,21 +46,30 @@ const UserNavbar = () => {
             <div className="flex items-center gap-4">
               {/* Profile Avatar */}
               <Avatar>
-                <AvatarImage src={user?.profileImgURL}/>
-                <AvatarFallback>{user?.username.slice(0,2).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={user?.profileImgURL} />
+                <AvatarFallback>
+                  {user?.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
 
               {/* Logout */}
-              <Button variant="outline" className="flex items-center gap-2" onClick={handleLogout}>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 *
+                cursor-pointer"
+                onClick={handleLogout}
+              >
                 <LogOut size={16} />
                 Logout
               </Button>
             </div>
           ) : (
-            <Button className="flex items-center gap-2">
-              <LogIn size={16} />
-              Login
-            </Button>
+            <Link to="/login">
+              <Button className="flex items-center gap-2 cursor-pointer">
+                <LogIn size={16} />
+                Login
+              </Button>
+            </Link>
           )}
         </div>
 
@@ -96,16 +105,23 @@ const UserNavbar = () => {
                 <span>My Account</span>
               </div>
 
-              <Button variant="outline" className="w-full flex gap-2" onClick={handleLogout}>
+              <Button
+                variant="outline"
+                className="w-full flex gap-2
+                cursor-pointer"
+                onClick={handleLogout}
+              >
                 <LogOut size={16} />
                 Logout
               </Button>
             </>
           ) : (
-            <Button className="w-full flex gap-2">
-              <LogIn size={16} />
-              Login
-            </Button>
+            <Link to="/login">
+              <Button className="w-full flex gap-2 cursor-pointer">
+                <LogIn size={16} />
+                Login
+              </Button>
+            </Link>
           )}
         </div>
       )}

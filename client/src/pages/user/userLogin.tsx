@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { loginUserSchema, LoginUserInput } from "../../schemas/authSchema";
+import ForgotPasswordDialog from "./forgotPasswordDialog";
 
 import { Button } from "@components/ui/button";
 import {
@@ -61,12 +62,9 @@ const UserLogin = () => {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  <div className="ml-auto">
+                    <ForgotPasswordDialog/>
+                  </div>
                 </div>
                 <Input id="password" type="password" required {...register('password')}/>
                 {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
