@@ -8,6 +8,7 @@ export class UserEntity{
         public role : 'user' | 'admin',
         public isBlocked : boolean,
         public isVerified : boolean,
+        public isGoogleAuth: boolean,
         public profileImgURL ?: string,
         public createdAt ?: Date,
         public updatedAT ?: Date,

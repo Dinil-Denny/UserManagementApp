@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { loginUserSchema, LoginUserInput } from "../../schemas/authSchema";
 import ForgotPasswordDialog from "./forgotPasswordDialog";
+import GoogleAuthButton from "@components/googleAuthButton";
 
 import { Button } from "@components/ui/button";
 import {
@@ -76,9 +77,11 @@ const UserLogin = () => {
           <Button type="submit" className="w-full cursor-pointer" form="login-form">
              {isLoading ? <Spinner/> : 'Login'}
           </Button>
-          <Button variant="outline" className="w-full cursor-pointer">
-            Login with Google
-          </Button>
+          {/* google auth button */}
+           <div className="w-full flex justify-center mt-4">
+            <GoogleAuthButton/> 
+           </div>
+          
         </CardFooter>
         <p className="text-center text-sm">
           Don&apos;t have an account?

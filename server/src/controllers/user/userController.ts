@@ -26,6 +26,41 @@ export class UserController {
     }
   };
 
+  googleAuth = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { token } = req.body;
+      console.log("token from googleAuth - controller:", token);
+      console.log(token);
+      if (!token) {
+        return res.status(400).json({ message: "Token is required" });
+      }
+      const userData = await this.userService.googleAuth(token);
+      console.log("userData-googleAuth-controler: ", userData);
+      const { accessToken, refreshToken } = userData;
+      //setting Refresh Token in an HttpOnly Cookie
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict", // Prevents CSRF attacks
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+      res.status(200).json({
+        success: true,
+        message: "Login successful",
+        accessToken,
+        user: {
+          id: userData.updatedUser._id,
+          username: userData.updatedUser.username,
+          email: userData.updatedUser.email,
+          role: userData.updatedUser.role,
+          profileImgURL: userData.updatedUser.profileImgURL,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
@@ -126,7 +161,9 @@ export class UserController {
     try {
       const { email, password } = req.body;
       await this.userService.resetPassword({ email, password });
-      res.status(200).json({message:"Password reset successful. Please login again."});
+      res
+        .status(200)
+        .json({ message: "Password reset successful. Please login again." });
     } catch (error) {
       next(error);
     }

@@ -11,4 +11,5 @@ export interface IUserService {
   recreateAccessToken(token: string): Promise<string>;
   resetPasswordVerifyOtp(data: OtpDTO): Promise<void>;
   resetPassword(data:ResetPassDTO): Promise<void>;
+  googleAuth(token:string):Promise<any>;
 }

@@ -2,6 +2,10 @@ export interface RegisterUserDTO {
   username: string;
   email: string;
   password: string;
+  //these are for google auth login
+  profileImgURL?: string;
+  isGoogleAuth?: boolean;
+  isVerified?: boolean;
 }
 
 export interface LoginUserDTO {
@@ -28,4 +32,9 @@ export interface RefreshTokenDTO {
 export interface ResetPassDTO {
   email: string;
   password: string;
+}
+
+export interface updateProfileImgDTO {
+  email: string;
+  imgUrl: string;
 }

@@ -17,6 +17,7 @@ import { OtpEntity } from "../../entities/OtpEntity";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { googleClient } from "../../config/googleClient";
 
 dotenv.config();
 
@@ -49,6 +50,70 @@ export class UserService implements IUserService {
     console.log("otp done - service");
     await sendOtpEmail(otp, email); //sending mail with otp
     console.log("mail send - service");
+  }
+
+  async googleAuth(token: string): Promise<any> {
+    //Verify the token with Google's servers
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    console.log("ticket:", ticket);
+
+    //Extract user info from the verified Google payload
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email || !payload.name)
+      throw new AppError("Invalid google token", 400);
+    console.log("payload - googleAuth service:", payload);
+    const { email, name, picture, sub: googleId } = payload;
+    //checking if user exist
+    const userExist = await this.userRepository.findByEmail(email);
+    //if user exist, check if account is blocked or not
+    if (userExist?.isBlocked) {
+      //we put ! after the variable to explicitly mention that it will not be null. For sure there will be a value
+      throw new AppError("Account is blocked", 403);
+    }
+    //if user exist and don't have a profile image
+    if (!userExist?.profileImgURL && picture) {
+      const data = { email: email, imgUrl: picture };
+      await this.userRepository.updateProfileImg(data);
+    }
+    //if user not exist create account
+    if (!userExist) {
+      console.log("user dose not exist");
+      //since here there is no password provided we are going to generate a random passowrd, hasht it and store it.
+      //or we can modify schema and do accordingly. But here for easiness we generate a random password and store it.
+      const randomPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      await this.userRepository.createUser({
+        username: name,
+        email: email,
+        password: hashedPassword,
+        profileImgURL: picture,
+        isGoogleAuth: true,
+        isVerified: true,
+      });
+    }
+    const user = await this.userRepository.findByEmail(email);
+    console.log('user-googleAuth-service:',user);
+    //generate access token and refresh token
+    const accessToken = generateAccessToken({
+      id: user!.id,
+      role: user!.role,
+    });
+    console.log('created access token-googleAuth')
+    const refreshToken = generateRefreshToken(user!.id);
+    //update the refresh token in db
+    const refreshTokenUpdateData: RefreshTokenDTO = {
+      id: user!.id,
+      token: refreshToken,
+    };
+    console.log('created refresh token - googleAuth')
+    const updatedUser = await this.userRepository.updateRefreshToken(
+      refreshTokenUpdateData,
+    );
+    console.log('updated user - googleAuth')
+    return { updatedUser, accessToken, refreshToken };
   }
 
   async userLogin(data: LoginUserDTO): Promise<any> {
@@ -136,18 +201,20 @@ export class UserService implements IUserService {
   async resetPasswordVerifyOtp(data: OtpDTO): Promise<void> {
     //1.check if a user with this email exist
     const { otp, email } = data;
-    console.log('otp & email in resetPasswordVerifyOtp - service:',otp,email)
+    console.log("otp & email in resetPasswordVerifyOtp - service:", otp, email);
     const userExist = await this.userRepository.findByEmail(email);
-    console.log('userExists:',userExist);
+    console.log("userExists:", userExist);
     if (!userExist) throw new AppError("User does not exist!", 404);
     //2.check if otp exist in otp db
     const otpExist = await this.userRepository.findOtp(email);
     if (!otpExist) throw new AppError("OTP not found", 404);
     //3.validate otp
-    if (otp !== otpExist.otp){
+    if (otp !== otpExist.otp) {
       throw new AppError("Invalid OTP", 401);
-    };
-    console.log(`otp:${otp}, otp in db:${otpExist.otp} - resetPasswordVerifyOtp service`);
+    }
+    console.log(
+      `otp:${otp}, otp in db:${otpExist.otp} - resetPasswordVerifyOtp service`,
+    );
   }
 
   async resetPassword(data: ResetPassDTO): Promise<void> {
@@ -156,7 +223,10 @@ export class UserService implements IUserService {
     //console.log('userExist:',userExist);
     if (!userExist) throw new AppError("User not found", 404);
     const hashedPassword = await bcrypt.hash(password, 10);
-    await this.userRepository.updatePassword({email:email,password:hashedPassword});
+    await this.userRepository.updatePassword({
+      email: email,
+      password: hashedPassword,
+    });
   }
 
   async reSendOtp(email: string): Promise<void> {

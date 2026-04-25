@@ -6,6 +6,8 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+//google auth provider - wrap our app component
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import "./index.css";
 import App from "./App";
@@ -49,7 +51,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {/* Providing Redux store to the entire app */}
     <Provider store={store}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID!}>
       <RouterProvider router={router} />
+      </GoogleOAuthProvider>
     </Provider>
   </StrictMode>,
 );

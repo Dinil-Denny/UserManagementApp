@@ -89,6 +89,29 @@ export const useAuth = () => {
     }
   };
 
+  const handleGoogleAuth = async (googleToken: string) => {
+    try {
+      dispatch(setLoading(true));
+      //sending it to our backend
+      const response = await api.post("/google-auth", { token: googleToken });
+      console.log("response data from googleAuth:", response.data);
+      //update global Redux state with token and user info
+      dispatch(
+        setCredentials({
+          token: response.data.accessToken,
+          user: response.data.user,
+        }),
+      );
+      toast.success("Login Successful");
+      navigate("/");
+    } catch (error:any) {
+      const message = error.response?.data?.message || "Sign in failed";
+      toast.error(message);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   // const handleSetToken = async (token:string) => {
   //   try {
   //     dispatch(setToken({token}))
@@ -98,5 +121,5 @@ export const useAuth = () => {
   //   }
   // }
 
-  return { ...authState, handleLogin, handleRegister, handleLogout };
+  return { ...authState, handleLogin, handleRegister, handleLogout, handleGoogleAuth };
 };

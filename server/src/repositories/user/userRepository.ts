@@ -10,6 +10,7 @@ import {
   SaveOtpDTO,
   RefreshTokenDTO,
   ResetPassDTO,
+  updateProfileImgDTO,
 } from "../../dtos/UserDTO";
 
 export class UserRepository implements IUserRepository {
@@ -97,5 +98,11 @@ export class UserRepository implements IUserRepository {
       { $set: { password: password } },
       { returnDocument: 'after' },
     );
+  }
+
+  //update profile image
+  async updateProfileImg(data:updateProfileImgDTO): Promise<void>{
+    const {email,imgUrl} = data;
+    await UserModel.findOneAndUpdate({emai:email},{$set:{profileImgURL:imgUrl}});
   }
 }

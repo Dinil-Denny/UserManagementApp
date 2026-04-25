@@ -10,6 +10,7 @@ const userSchema = new Schema(
     isBlocked: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     refreshToken: {type: String},
+    isGoogleAuth: {type: Boolean, default:false},
   },
   { timestamps: true },
 );
