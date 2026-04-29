@@ -4,21 +4,21 @@ import { Button } from "@components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
-import { store } from "../store/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import UserProfileDialog from "@pages/user/myAccountDialog";
 
 const UserNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const user = store.getState().userAuth.user;
+  //state for opening and closing of user profile dialog
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  //In React, we should use the useSelector hook inside a component to get the state.
+  const user = useSelector((state: RootState) => state.userAuth.user);
   console.log("user in navbar: ", user);
-
-  // const profileImgFallBack = user.username;
-  // console.log('profileImgFallBack-',profileImgFallBack)
 
   const { handleLogout } = useAuth();
 
-  // 👉 Replace this with real auth logic later
-  const token = localStorage.getItem("token");
+  const token = useSelector((state: RootState) => state.userAuth.token);
 
   return (
     <nav className="w-full border-b bg-white shadow-sm">
@@ -33,17 +33,21 @@ const UserNavbar = () => {
 
         {/* DESKTOP MENU */}
         <div className="hidden md:flex items-center gap-6">
-          {/* Example Links */}
-          <Link
-            to="/dashboard"
-            className="text-sm font-medium hover:text-blue-500"
-          >
-            Account Settings
-          </Link>
+          {/* Example Links
+          {user ? (
+            
+          ) : null} */}
 
           {/* 👤 Right side actions */}
           {token ? (
             <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                className="text-sm font-medium cursor-pointer"
+                onClick={() => setIsProfileOpen(true)}
+              >
+                My Account
+              </Button>
               {/* Profile Avatar */}
               <Avatar>
                 <AvatarImage src={user?.profileImgURL} />
@@ -54,10 +58,10 @@ const UserNavbar = () => {
 
               {/* Logout */}
               <Button
-                variant="outline"
+                variant="default"
                 className="flex items-center gap-2 *
                 cursor-pointer"
-                onClick={handleLogout}
+                onClick={() => handleLogout()}
               >
                 <LogOut size={16} />
                 Logout
@@ -88,21 +92,30 @@ const UserNavbar = () => {
       {/* MOBILE DROPDOWN */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-3">
-          <Link to="/dashboard" className="block text-sm">
+          {/* <Link to="/dashboard" className="block text-sm">
             Dashboard
           </Link>
           <Link to="/users" className="block text-sm">
             Users
-          </Link>
+          </Link> */}
 
           {token ? (
             <>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={()=>{
+                setIsProfileOpen(true);
+                setIsOpen(false); //we close the mobile menu when opening user profile dialog
+              }}>
                 <Avatar>
-                  <AvatarImage src="https://i.pravatar.cc/40" />
+                  <AvatarImage src={user?.profileImgURL} />
                   <AvatarFallback>U</AvatarFallback>
                 </Avatar>
-                <span>My Account</span>
+                <Button
+                  variant="link"
+                  className="text-sm font-medium cursor-pointer"
+                  onClick={() => setIsProfileOpen(true)}
+                >
+                  My Account
+                </Button>
               </div>
 
               <Button
@@ -125,6 +138,11 @@ const UserNavbar = () => {
           )}
         </div>
       )}
+      {/* The Profile Dialog */}
+      <UserProfileDialog
+        isOpen={isProfileOpen}
+        onOpenChange={setIsProfileOpen}
+      />
     </nav>
   );
 };

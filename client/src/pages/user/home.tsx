@@ -19,7 +19,7 @@ type HeroSectionProps = {
 
 const Home = ({
   // title = `HEY, ${user?.username ? user.username : 'Guest'}`,
-  subtitle = "How are you doing",
+  subtitle = "How are you doing 😀",
   primaryLabel = "Get Started",
   secondaryLabel = "Learn More",
   onPrimaryClick,
@@ -59,7 +59,7 @@ const Home = ({
               {title}
             </h1>
 
-            <p className="mt-4 text-2xl font-semibold text-foreground sm:text-3xl lg:text-4xl">
+            <p className="mt-4 mb-4 text-2xl font-semibold text-foreground sm:text-3xl lg:text-4xl">
               {subtitle}
             </p>
 

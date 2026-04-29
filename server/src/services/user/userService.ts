@@ -123,7 +123,7 @@ export class UserService implements IUserService {
     console.log("userExist :", userExist);
     //if not email registered
     if (!userExist) {
-      throw new AppError("Invalid credentials", 401);
+      throw new AppError("User not found!", 404);
     }
     //if user's email is not verified
     if (!userExist.isVerified) {
@@ -150,7 +150,7 @@ export class UserService implements IUserService {
     const passMatch = await bcrypt.compare(password, userExist.password);
     //if passwords don't match
     if (!passMatch) {
-      throw new AppError("Invalid credentials", 401);
+      throw new AppError("Invalid credentials", 400);
     }
     //generate access token and refresh token
     const accessToken = generateAccessToken({
@@ -188,7 +188,7 @@ export class UserService implements IUserService {
       throw new AppError("OTP not found", 404);
     }
     if (otp !== otpExists.otp) {
-      throw new AppError("Invalid OTP", 401);
+      throw new AppError("Invalid OTP", 400);
     } else {
       //if otp exist and it is verified then update isVerified field in user document to true
       await this.userRepository.markAsVerified(email);
@@ -210,7 +210,7 @@ export class UserService implements IUserService {
     if (!otpExist) throw new AppError("OTP not found", 404);
     //3.validate otp
     if (otp !== otpExist.otp) {
-      throw new AppError("Invalid OTP", 401);
+      throw new AppError("Invalid OTP", 400);
     }
     console.log(
       `otp:${otp}, otp in db:${otpExist.otp} - resetPasswordVerifyOtp service`,
