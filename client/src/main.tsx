@@ -23,6 +23,7 @@ import UserRegister from "@pages/user/userRegister";
 import InputOTPForm from "@pages/user/otp";
 import ResetPasswordInputOTPForm from "@pages/user/resetPasswordOTP";
 import ResetPassword from "@pages/user/resetPassword";
+import EditProfile from "@pages/user/editProfile";
 
 //admin pages
 import AdminLogin from "@pages/admin/adminLogin";
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
       {/* ------------private routes--------------- */}
       <Route element={<UserPrivateRoute/>}>
         <Route index={true} path="/" element={<Home/>}/>
+        <Route path="/edit-profile" element={<EditProfile/>}/>
       </Route>
 
       {/* ----------------admin routes----------------- */}

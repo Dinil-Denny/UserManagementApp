@@ -1,4 +1,4 @@
-import { LoginUserDTO, RegisterUserDTO, OtpDTO, ResetPassDTO } from "../../dtos/UserDTO";
+import { LoginUserDTO, RegisterUserDTO, OtpDTO, ResetPassDTO, updateProfileDTO } from "../../dtos/UserDTO";
 import { OtpEntity } from "../../entities/OtpEntity";
 import { UserEntity } from "../../entities/UserEntity";
 
@@ -12,4 +12,5 @@ export interface IUserService {
   resetPasswordVerifyOtp(data: OtpDTO): Promise<void>;
   resetPassword(data:ResetPassDTO): Promise<void>;
   googleAuth(token:string):Promise<any>;
+  editProfile(updatedData:updateProfileDTO):Promise<UserEntity>
 }

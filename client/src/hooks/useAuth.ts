@@ -9,8 +9,13 @@ import {
   setAuthError,
   setLoading,
   setToken,
+  updateUserInfo,
 } from "../store/slices/userAuthSlice";
-import { LoginUserInput, RegisterUserInput } from "../schemas/authSchema";
+import {
+  LoginUserInput,
+  RegisterUserInput,
+  EditProfileInput,
+} from "../schemas/authSchema";
 
 //Components should only focus on rendering.
 //  All logic related to authentication is placed here.
@@ -104,12 +109,34 @@ export const useAuth = () => {
       );
       toast.success("Login Successful");
       navigate("/");
-    } catch (error:any) {
+    } catch (error: any) {
       const message = error.response?.data?.message || "Sign in failed";
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
     }
+  };
+
+  const handleEditProfile = async (formData: FormData) => {
+    try {
+      console.log('formData in handleEditProfile - useAuth:',formData);
+
+      const response = await api.put("/edit-profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log('response from edit profile - useAuth:',response);
+      //When response came update global Redux state with token and user info
+      dispatch(
+        updateUserInfo({
+          user: response.data.user,
+        }),
+      );
+      toast.success("Profile updated successfully");
+      navigate("/");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Error occured while updating your profile";
+      toast.error(message);
+    } 
   };
 
   // const handleSetToken = async (token:string) => {
@@ -121,5 +148,12 @@ export const useAuth = () => {
   //   }
   // }
 
-  return { ...authState, handleLogin, handleRegister, handleLogout, handleGoogleAuth };
+  return {
+    ...authState,
+    handleLogin,
+    handleRegister,
+    handleLogout,
+    handleGoogleAuth,
+    handleEditProfile,
+  };
 };

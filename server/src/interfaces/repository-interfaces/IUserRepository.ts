@@ -7,6 +7,7 @@ import {
   RefreshTokenDTO,
   ResetPassDTO,
   updateProfileImgDTO,
+  updateProfileDTO,
 } from "../../dtos/UserDTO";
 
 export interface IUserRepository {
@@ -24,4 +25,5 @@ export interface IUserRepository {
   tokenExist(id: string): Promise<string | null>;
   updatePassword(data: ResetPassDTO): Promise<void>;
   updateProfileImg(data:updateProfileImgDTO): Promise<void>;
+  updateProfile(data:updateProfileDTO): Promise<UserEntity | null>;
 }

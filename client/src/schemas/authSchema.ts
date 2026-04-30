@@ -5,7 +5,10 @@ import * as z from "zod";
 //user registration data validation schema
 export const registerUserSchema = z
   .object({
-    username: z.string().min(3, "Username must be at least 3 characters"),
+    username: z
+      .string()
+      .min(3, "Username must be at least 3 characters")
+      .max(20, "Username must be under 20 characters"),
     email: z.email("invalid email address"),
     password: z
       .string()
@@ -37,7 +40,7 @@ export const loginUserSchema = z.object({
   //.regex(/[^a-zA-Z0-9]/, "Password must contain at least one special symbol"),
 });
 
-//otp validation schema
+//otp input validation schema
 export const otpSchema = z.object({
   otp: z
     .string()
@@ -70,6 +73,28 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+//edit profile shcema
+export const editProfileSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be under 20 characters"),
+  email: z.email("invalid email address"),
+  profileImgURL: z
+    .custom<File>((v) => v instanceof File, {
+      message: "image is required",
+    })
+    .optional()
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: "File size must be under 5MB",
+    })
+    .refine(
+      (file) =>
+        !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      { message: "Only .jpg, .png, and .webp formats are supported." },
+    ),
+});
+
 // We infer the types directly from the schemas, ensuring a Single Source of Truth.
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;
@@ -77,3 +102,4 @@ export type LoginUserInput = z.infer<typeof loginUserSchema>;
 export type OTPInput = z.infer<typeof otpSchema>;
 export type EmailInput = z.infer<typeof emailSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type EditProfileInput = z.infer<typeof editProfileSchema>;

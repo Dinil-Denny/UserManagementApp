@@ -5,6 +5,7 @@ import {
   SaveOtpDTO,
   RefreshTokenDTO,
   ResetPassDTO,
+  updateProfileDTO,
 } from "../../dtos/UserDTO";
 import { UserEntity } from "../../entities/UserEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
@@ -266,5 +267,15 @@ export class UserService implements IUserService {
       role: userExist.role,
     });
     return newAccessToken;
+  }
+
+  async editProfile(data:updateProfileDTO):Promise<UserEntity>{
+    const updatedUserData = await this.userRepository.updateProfile(data)
+    console.log('updated user profile data: ',updatedUserData);
+    if(updatedUserData){
+      return updatedUserData;
+    }else{
+      throw new AppError('User not found!',404);
+    }
   }
 }

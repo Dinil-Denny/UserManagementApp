@@ -11,6 +11,7 @@ import {
   RefreshTokenDTO,
   ResetPassDTO,
   updateProfileImgDTO,
+  updateProfileDTO,
 } from "../../dtos/UserDTO";
 
 export class UserRepository implements IUserRepository {
@@ -69,7 +70,7 @@ export class UserRepository implements IUserRepository {
   async updateRefreshToken(data: RefreshTokenDTO): Promise<UserEntity | null> {
     return await UserModel.findByIdAndUpdate(
       data.id,
-      { refreshToken: data.token },
+      {$set:{ refreshToken: data.token} }, // added $set --------*****-----------
       { returnDocument: 'after' },
     );
   }
@@ -104,5 +105,16 @@ export class UserRepository implements IUserRepository {
   async updateProfileImg(data:updateProfileImgDTO): Promise<void>{
     const {email,imgUrl} = data;
     await UserModel.findOneAndUpdate({emai:email},{$set:{profileImgURL:imgUrl}});
+  }
+
+  //update user profile
+  async updateProfile(data:updateProfileDTO): Promise<UserEntity | null>{
+    console.log('data in updateProfile - repository:',data);
+    const {id,username,profileImgURL} = data;
+    const dataToUpdate: {username: string; profileImgURL?: string} = {username};
+    if(profileImgURL !== undefined){
+      dataToUpdate.profileImgURL = profileImgURL;
+    };
+    return await UserModel.findByIdAndUpdate(id,{$set:dataToUpdate},{ returnDocument: 'after' });
   }
 }

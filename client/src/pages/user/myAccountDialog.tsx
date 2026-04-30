@@ -58,7 +58,7 @@ const UserProfileDialog = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    className="absolute top-0 right-0"
+                    className="absolute top-0 right-0 cursor-pointer"
                     size="icon"
                     variant="outline"
                     onClick={handleEdit}

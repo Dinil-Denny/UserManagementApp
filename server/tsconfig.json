@@ -75,7 +75,7 @@
     //   "@routes/*" : ["routes/*"],
     // }
   },
-  "include": ["src"],
+  "include": ["src","cloudinary.d.ts"],
   "exclude": ["node_modules"]
 }
 

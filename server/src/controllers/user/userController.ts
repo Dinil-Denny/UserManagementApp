@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/authMiddleware";
 import { IUserService } from "../../interfaces/service-interfaces/IUserService";
-import { RegisterUserDTO, OtpDTO } from "../../dtos/UserDTO";
+import { RegisterUserDTO, updateProfileDTO } from "../../dtos/UserDTO";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -21,7 +21,7 @@ export class UserController {
       await this.userService.registerUser(userDetails);
       console.log("reg done - controller");
       res.status(201).json({ message: "user registered successfully" });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -56,7 +56,7 @@ export class UserController {
           profileImgURL: userData.updatedUser.profileImgURL,
         },
       });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -93,7 +93,7 @@ export class UserController {
           profileImgURL: userData.user.profileImgURL,
         },
       });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -113,7 +113,7 @@ export class UserController {
       });
       console.log("cleared refreshToken-controller");
       res.status(200).json({ message: "Logged out successfully" });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -125,7 +125,7 @@ export class UserController {
       const otpData = await this.userService.verifyOtp({ otp, email });
       console.log("otpData - controller:", otpData);
       res.status(200).json({ message: "OTP verified" });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -141,7 +141,7 @@ export class UserController {
       await this.userService.resetPasswordVerifyOtp({ email, otp });
       console.log("reset pass otp verified");
       return res.status(200).json({ message: "OTP verified" });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -152,7 +152,7 @@ export class UserController {
       console.log("email - resend otp:", email);
       await this.userService.reSendOtp(email);
       res.status(200).json({ message: "OTP resend successfully" });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
@@ -164,18 +164,10 @@ export class UserController {
       res
         .status(200)
         .json({ message: "Password reset successful. Please login again." });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
-
-  // resetPasswordOtp = async(req:Request,res:Response,next:NextFunction) => {
-  //   try {
-  //     const {email} = req.body;
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 
   refreshAccessToken = async (
     req: Request,
@@ -191,8 +183,40 @@ export class UserController {
       const newAccessToken: string =
         await this.userService.recreateAccessToken(currentRefreshToken);
       res.status(200).json({ accessToken: newAccessToken });
-    } catch (error) {
+    } catch (error:any) {
       next(error);
     }
   };
+
+  editProfile = async(req:AuthRequest,res:Response,next:NextFunction) => {
+    try {
+      console.log('req.boy in editProfile - controller:',req.body);
+      console.log("req.user - edit profile controller",req.user);
+      const id = req.user?.id;
+      const {username} = req.body;
+      // Create an update object
+      const updatedData: any = {username};
+      // If a new file was uploaded, Multer puts the Cloudinary URL in req.file.path
+      if(req.file){
+        console.log('req.file.path:',req.file.path);
+        updatedData.profileImgURL = req.file.path;
+      };
+      console.log('updated Data:',updatedData);
+      const data:updateProfileDTO = {id,...updatedData};
+      console.log('data:',data);
+      const updatedUser = await this.userService.editProfile(data);
+      console.log('updatedUser data - controller:',updatedUser);
+      res.status(200).json({success: true,
+        message: "Profile updated successfully",
+        user: {
+          id: updatedUser.id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          role: updatedUser.role,
+          profileImgURL: updatedUser.profileImgURL,
+        }})
+    } catch (error:any) {
+      next(error)
+    }
+  }
 }

@@ -4,9 +4,11 @@ import { inputValidator } from "../../middlewares/zodValidationMiddleware";
 import {
   registerUserSchema,
   loginUserSchema,
-  resetPasswordSchema
+  resetPasswordSchema,
+  editProfileSchema
 } from "../../validations/userValidations";
 import { authMiddleware } from "../../middlewares/authMiddleware";
+import {upload} from "../../middlewares/cloudinaryConfig";
 
 const router = Router();
 
@@ -20,5 +22,6 @@ router.post("/reset-password-otp", userController.resendOtp); //since the logic 
 router.post("/resetPassword-verify-otp", userController.resetPassVerifyOtp);
 router.post('/reset-password', inputValidator(resetPasswordSchema), userController.resetPassword);
 router.post('/google-auth', userController.googleAuth);
+router.put('/edit-profile',authMiddleware, upload.single('profileImgURL'),userController.editProfile);
 
 export default router;

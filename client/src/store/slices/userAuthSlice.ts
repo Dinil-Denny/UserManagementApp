@@ -46,6 +46,11 @@ export const userAuthSlice = createSlice({
   initialState,
   reducers: {
     // These functions change the Redux state when we call 'dispatch()'
+    updateUserInfo:(state,action: PayloadAction<{user:any}>) => {
+      const {user} = action.payload;
+      state.user = user;
+      localStorage.setItem("user",JSON.stringify(user));
+    },
     setCredentials: (
       state,
       action: PayloadAction<{ user: any; token: string }>,
@@ -83,5 +88,5 @@ export const userAuthSlice = createSlice({
   },
 });
 
-export const { setCredentials, logOut, setAuthError, setLoading, setToken } = userAuthSlice.actions;
+export const { updateUserInfo, setCredentials, logOut, setAuthError, setLoading, setToken } = userAuthSlice.actions;
 export default userAuthSlice.reducer;

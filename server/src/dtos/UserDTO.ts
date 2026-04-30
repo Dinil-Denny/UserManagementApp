@@ -38,3 +38,9 @@ export interface updateProfileImgDTO {
   email: string;
   imgUrl: string;
 }
+
+export interface updateProfileDTO {
+  id: string;
+  username: string;
+  profileImgURL?: string;
+}
