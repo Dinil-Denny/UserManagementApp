@@ -28,7 +28,7 @@ const AdminLogin = () => {
       adminEmail === adminDetails.email &&
       password === adminDetails.password
     ) {
-      toast("Login Successful ✅", { theme: "colored", type: "success" });
+      toast("Login Successful", { theme: "colored", type: "success" });
     } else {
       toast("Invalid Credentials! 🚨", { theme: "colored", type: "error" });
     }

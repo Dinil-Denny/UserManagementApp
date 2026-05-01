@@ -11,7 +11,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware";
 import {upload} from "../../middlewares/cloudinaryConfig";
 
 const router = Router();
-
+// user routes
 router.post("/register", inputValidator(registerUserSchema), userController.register);
 router.post("/login", inputValidator(loginUserSchema), userController.login);
 router.post("/logout", authMiddleware, userController.logout);

@@ -30,7 +30,15 @@ export const authMiddleware = (
     //the decoded object also contain 2 extra keys - 'iat'&'exp'. we neglect it and populate req.user in the given object model
     req.user = decoded as {id:string, role:string}; 
     next();
-  } catch (error) {
+  } catch (error:any) {
+    //handle token expired and JWT errors and send a 401 status
+    if(error.name === "TokenExpiredError"){
+      return next(new AppError("Token expired", 401));
+    };
+    if (error.name === "JsonWebTokenError") {
+      return next(new AppError("Invalid token", 401));
+    };
+    //for any other errors
     next(error);
   }
 };

@@ -28,9 +28,9 @@ const AdminNavbar = () => {
         <div className="hidden md:flex items-center gap-6">
           
           {/* Example Links */}
-          <Link to="/dashboard" className="text-sm font-medium hover:text-blue-500">
+          {/* <Link to="/dashboard" className="text-sm font-medium hover:text-blue-500">
             Manage Users
-          </Link>
+          </Link> */}
 
           {/* 👤 Right side actions */}
           {token ? (
