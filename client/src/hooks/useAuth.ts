@@ -63,8 +63,13 @@ export const useAuth = () => {
         }),
       );
       //4.Toast and redirect
-      toast.success("Login Successful");
-      navigate("/");
+      if (response.data.user.role === "admin") {
+        toast.success("Access grantend");
+        navigate('/admin');
+      } else {
+        toast.success("Login Successful");
+        navigate("/");
+      }
     } catch (err: any) {
       if (err.response?.data?.errorCode === "USER_NOT_VERIFIED") {
         toast.info("Please verify your email first. A new OTP has been sent.");
@@ -119,12 +124,12 @@ export const useAuth = () => {
 
   const handleEditProfile = async (formData: FormData) => {
     try {
-      console.log('formData in handleEditProfile - useAuth:',formData);
+      console.log("formData in handleEditProfile - useAuth:", formData);
 
       const response = await api.put("/edit-profile", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log('response from edit profile - useAuth:',response);
+      console.log("response from edit profile - useAuth:", response);
       //When response came update global Redux state with token and user info
       dispatch(
         updateUserInfo({
@@ -134,9 +139,11 @@ export const useAuth = () => {
       toast.success("Profile updated successfully");
       navigate("/");
     } catch (error: any) {
-      const message = error.response?.data?.message || "Error occured while updating your profile";
+      const message =
+        error.response?.data?.message ||
+        "Error occured while updating your profile";
       toast.error(message);
-    } 
+    }
   };
 
   // const handleSetToken = async (token:string) => {

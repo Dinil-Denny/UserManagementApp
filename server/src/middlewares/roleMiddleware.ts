@@ -4,6 +4,7 @@ import { AppError } from "../utils/AppError";
 
 export const roleMiddleware = (role: string) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
+    console.log('role in role middleware: ',req.user?.role);
     if (!req.user) {
       return next(new AppError("User not authenticated", 401));
     }

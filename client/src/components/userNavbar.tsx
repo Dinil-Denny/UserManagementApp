@@ -13,12 +13,13 @@ const UserNavbar = () => {
   //state for opening and closing of user profile dialog
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   //In React, we should use the useSelector hook inside a component to get the state.
-  const user = useSelector((state: RootState) => state.userAuth.user);
-  console.log("user in navbar: ", user);
+  // const user = useSelector((state: RootState) => state.userAuth.user);
+  // console.log("user in navbar: ", user);
 
   const { handleLogout } = useAuth();
 
-  const token = useSelector((state: RootState) => state.userAuth.token);
+  const {token,user} = useSelector((state: RootState) => state.userAuth);
+  const role = user?.role;
 
   return (
     <nav className="w-full border-b bg-white shadow-sm">
@@ -39,7 +40,7 @@ const UserNavbar = () => {
           ) : null} */}
 
           {/* 👤 Right side actions */}
-          {token ? (
+          {(token && role==='user') ? (
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"

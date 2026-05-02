@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { loginUserSchema, LoginUserInput } from "../../schemas/authSchema";
+import { useAuth } from "@hooks/useAuth";
+
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -8,31 +13,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
-import { toast } from "react-toastify";
+import { Spinner } from "@components/ui/spinner";
 
 const AdminLogin = () => {
-  //admin credentials
-  const adminDetails = { email: "admin@gmail.com", password: "admin123" };
+  const { handleLogin } = useAuth();
 
-  const [adminEmail, setAdminEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const form = useForm<LoginUserInput>({
+    resolver: zodResolver(loginUserSchema),
+    defaultValues:{email:"",password:""},
+  });
 
-  const handleSubmission = (e: React.SubmitEvent) => {
-    e.preventDefault();
-    console.log(`email:${adminEmail},pass:${password}`);
-    if (!adminEmail || !password) {
-      toast("Enter full credentials", { theme: "colored", type: "warning" });
-    } else if (
-      adminEmail === adminDetails.email &&
-      password === adminDetails.password
-    ) {
-      toast("Login Successful", { theme: "colored", type: "success" });
-    } else {
-      toast("Invalid Credentials! 🚨", { theme: "colored", type: "error" });
-    }
-  };
+  const onSubmit = async(data:LoginUserInput) => {
+    console.log('data - admin login:',data);
+    handleLogin(data);
+  }
 
   return (
     <div className="h-screen flex items-center justify-center">
@@ -44,39 +47,56 @@ const AdminLogin = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form id="admin-login-form" onSubmit={handleSubmission}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  onChange={(e) => setAdminEmail(e.target.value)}
+          <Form {...form}>
+            <form id="admin-login-form" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex flex-col gap-6">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Label htmlFor="email">Email</Label>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="m@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Label htmlFor="password">Password</Label>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button
             type="submit"
             className="w-full cursor-pointer"
             form="admin-login-form"
+            disabled={form.formState.isSubmitting}
           >
-            Access Dashboard
+            {form.formState.isSubmitting ? <Spinner/> : "Access Dashboard"}
           </Button>
         </CardFooter>
       </Card>

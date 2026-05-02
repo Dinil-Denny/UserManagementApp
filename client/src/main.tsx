@@ -26,7 +26,10 @@ import ResetPassword from "@pages/user/resetPassword";
 import EditProfile from "@pages/user/editProfile";
 
 //admin pages
+import AdminPrivateRoute from "@components/auth/adminPrivateRoute";
+
 import AdminLogin from "@pages/admin/adminLogin";
+import AdminDashboard from "@pages/admin/adminDashboard";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +48,9 @@ const router = createBrowserRouter(
 
       {/* ----------------admin routes----------------- */}
       <Route path="/admin/login" element={<AdminLogin />} />
+      <Route element={<AdminPrivateRoute/>}>
+        <Route index={true} path="/admin" element={<AdminDashboard/>}/>
+      </Route>
     </Route>,
   ),
 );

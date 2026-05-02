@@ -3,12 +3,16 @@ import { Menu, X, LogIn, LogOut } from "lucide-react";
 import { Button } from "@components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const AdminNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // 👉 Replace this with real auth logic later
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const {token,user} = useSelector((state:RootState)=>state.userAuth);
+  const role = user?.role;
 
   return (
     <nav className="w-full border-b bg-white shadow-sm">
@@ -33,7 +37,7 @@ const AdminNavbar = () => {
           </Link> */}
 
           {/* 👤 Right side actions */}
-          {token ? (
+          {(token && role === 'admin') ? (
             <div className="flex items-center gap-4">
               {/* Logout */}
               <Button variant="outline" className="flex items-center gap-2">
