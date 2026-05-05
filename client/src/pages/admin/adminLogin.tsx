@@ -35,7 +35,7 @@ const AdminLogin = () => {
   const onSubmit = async(data:LoginUserInput) => {
     console.log('data - admin login:',data);
     handleLogin(data);
-  }
+  };
 
   return (
     <div className="h-screen flex items-center justify-center">

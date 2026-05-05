@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { loginUserSchema, LoginUserInput } from "../../schemas/authSchema";
 import ForgotPasswordDialog from "./forgotPasswordDialog";
-import GoogleAuthButton from "@components/googleAuthButton";
+import GoogleAuthButton from "@components/user/googleAuthButton";
 
 import { Button } from "@components/ui/button";
 import {

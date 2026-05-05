@@ -1,8 +1,8 @@
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import { Outlet, useLocation } from "react-router-dom";
-import UserNavbar from "@components/userNavbar";
-import AdminNavbar from "@components/adminNavbar";
+import UserNavbar from "@components/user/userNavbar";
+import AdminNavbar from "@components/admin/adminNavbar";
 
 function App() {
   const location = useLocation();

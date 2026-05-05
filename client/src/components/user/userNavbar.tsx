@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState } from "../../store/store";
 import UserProfileDialog from "@pages/user/myAccountDialog";
 
 const UserNavbar = () => {

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Menu, X, LogIn, LogOut } from "lucide-react";
 import { Button } from "@components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState } from "../../store/store";
+import { useAuth } from "@hooks/useAuth";
 
 const AdminNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 👉 Replace this with real auth logic later
-  // const token = localStorage.getItem("token");
+  const {handleLogout} = useAuth()
+
   const {token,user} = useSelector((state:RootState)=>state.userAuth);
   const role = user?.role;
 
@@ -40,16 +40,18 @@ const AdminNavbar = () => {
           {(token && role === 'admin') ? (
             <div className="flex items-center gap-4">
               {/* Logout */}
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="flex items-center gap-2" onClick={handleLogout}>
                 <LogOut size={16} />
                 Logout
               </Button>
             </div>
           ) : (
+            <Link to="/admin/login">
             <Button className="flex items-center gap-2">
               <LogIn size={16} />
               Login
             </Button>
+            </Link>
           )}
         </div>
 
@@ -76,18 +78,20 @@ const AdminNavbar = () => {
             Users
           </Link>
 
-          {token ? (
+          {(token && role === 'admin') ? (
             <>
-              <Button variant="outline" className="w-full flex gap-2">
+              <Button variant="outline" className="w-full flex gap-2" onClick={handleLogout}>
                 <LogOut size={16} />
                 Logout
               </Button>
             </>
           ) : (
+            <Link to="/admin/login">
             <Button className="w-full flex gap-2">
               <LogIn size={16} />
               Login
             </Button>
+            </Link>
           )}
         </div>
       )}
