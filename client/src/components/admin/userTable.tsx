@@ -11,21 +11,41 @@ import { Switch } from "@components/ui/switch";
 import { Button } from "@components/ui/button";
 import { Edit2, Trash2 } from "lucide-react";
 import StatusBadge from "./statusBadge";
+import { User } from "../../types/admin/adminSideTypes";
+import DeleteUserDialog from "./deleteUserDialog";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import {
+  deleteUser,
+  toggleUserStatus,
+} from "../../store/slices/adminUsersSlice";
 
 // We define the shape of a User here temporarily for the UI
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  profileImgURL?: string;
-  isActive: boolean;
-}
+// interface User {
+//   id: string;
+//   username: string;
+//   email: string;
+//   profileImgURL?: string;
+//   isBlocked: boolean;
+// }
 
 interface UsersTableProps {
   users: User[];
 }
 
 const UsersTable = ({ users }: UsersTableProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleToggleStatus = (id: string, currentStatus: boolean) => {
+    const isBlocked = !currentStatus;
+    dispatch(toggleUserStatus({id,isBlocked}));
+  };
+
+  const handleDeleteUser = (id:string) => {
+    dispatch(deleteUser(id));
+  };
+
   return (
     <div className="w-full overflow-x-auto">
       <Table>
@@ -41,7 +61,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
         </TableHeader>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user._id}>
+            <TableRow key={user.id}>
               {/* AVATAR */}
               <TableCell>
                 <Avatar>
@@ -58,24 +78,35 @@ const UsersTable = ({ users }: UsersTableProps) => {
 
               {/* STATUS BADGE */}
               <TableCell>
-                <StatusBadge status={user.isActive ? 'Active' : 'Blocked'} />
+                <StatusBadge status={user.isBlocked ? "Blocked" : "Active"} />
               </TableCell>
 
               {/* TOGGLE SWITCH */}
               <TableCell>
                 {/* We will add the onChange handler to this switch later */}
-                <Switch checked={user.isActive} />
+                <Switch className="cursor-pointer" checked={user.isBlocked} onCheckedChange={()=>handleToggleStatus(user.id,user.isBlocked)}/>
               </TableCell>
 
               {/* ACTION BUTTONS */}
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+                  {/* edit button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 cursor-pointer"
+                  >
                     <Edit2 className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-800 hover:bg-red-50">
+                  {/* delete button */}
+                  <DeleteUserDialog username={user.username} onConfirm={()=>handleDeleteUser(user.id)}/>
+                  {/* <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-red-600 hover:text-red-800 hover:bg-red-50 cursor-pointer"
+                  >
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </Button> */}
                 </div>
               </TableCell>
             </TableRow>

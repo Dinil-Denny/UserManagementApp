@@ -12,6 +12,6 @@ export class UserEntity{
         public profileImgURL ?: string,
         public createdAt ?: Date,
         public updatedAT ?: Date,
-        public refreshToken ?: String,
+        public refreshToken ?: string,
     ){};
 };

@@ -6,6 +6,7 @@ import {
   RefreshTokenDTO,
   ResetPassDTO,
   updateProfileDTO,
+  OtpDocResponseDTO
 } from "../../dtos/UserDTO";
 import { UserEntity } from "../../entities/UserEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
@@ -14,7 +15,7 @@ import { AppError } from "../../utils/AppError";
 import { generateOTP } from "../../utils/generateOTP";
 import bcrypt from "bcrypt";
 import sendOtpEmail from "../../utils/sendEmail";
-import { OtpEntity } from "../../entities/OtpEntity";
+// import { OtpEntity } from "../../entities/OtpEntity";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -181,7 +182,7 @@ export class UserService implements IUserService {
     console.log("removed refreshToken in DB - service");
   }
 
-  async verifyOtp(data: OtpDTO): Promise<OtpEntity> {
+  async verifyOtp(data: OtpDTO): Promise<OtpDocResponseDTO> {
     const { otp, email } = data;
     console.log("otp,email-verify otp service", otp, email);
     const otpExists = await this.userRepository.findOtp(email);

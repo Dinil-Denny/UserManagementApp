@@ -14,6 +14,7 @@ import {upload} from "../../middlewares/cloudinaryConfig";
 const router = Router();
 // user routes
 router.post("/register", inputValidator(registerUserSchema), userController.register);
+//user and admin uses same login and logout routes
 router.post("/login", inputValidator(loginUserSchema), userController.login);
 router.post("/logout", authMiddleware, userController.logout);
 router.post("/verify-otp", userController.verifyOtp);

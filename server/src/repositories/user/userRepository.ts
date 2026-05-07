@@ -1,5 +1,5 @@
 import { UserEntity } from "../../entities/UserEntity";
-import { OtpEntity } from "../../entities/OtpEntity";
+// import { OtpEntity } from "../../entities/OtpEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
 import { UserModel } from "../../models/user/userSchema";
 import { OtpModel } from "../../models/user/otpSchema";
@@ -12,6 +12,7 @@ import {
   ResetPassDTO,
   updateProfileImgDTO,
   updateProfileDTO,
+  OtpDocResponseDTO
 } from "../../dtos/UserDTO";
 
 export class UserRepository implements IUserRepository {
@@ -45,10 +46,10 @@ export class UserRepository implements IUserRepository {
   }
 
   //finding otp document
-  async findOtp(email: string): Promise<OtpEntity | null> {
+  async findOtp(email: string): Promise<OtpDocResponseDTO | null> {
     const otp = await OtpModel.findOne({ email: email });
     if (!otp) return null;
-    return otp as OtpEntity;
+    return otp as OtpDocResponseDTO;
   }
 
   //deleting the otp document

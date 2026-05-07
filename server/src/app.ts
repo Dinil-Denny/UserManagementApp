@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from '../src/config/db';
 import userRoutes from '../src/routes/user/userRoutes';
+import adminRoutes from "../src/routes/admin/adminRoutes";
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import cookieParser from "cookie-parser";
 
@@ -25,8 +26,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+//mounting user and admin user routes
 app.use('/',userRoutes);
+app.use('/admin',adminRoutes);
 //error hanlding middleware
 app.use(errorMiddleware);
 

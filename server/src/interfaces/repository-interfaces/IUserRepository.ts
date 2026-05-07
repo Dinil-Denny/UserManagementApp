@@ -1,5 +1,5 @@
 import { UserEntity } from "../../entities/UserEntity";
-import { OtpEntity } from "../../entities/OtpEntity";
+// import { OtpEntity } from "../../entities/OtpEntity";
 import {
   RegisterUserDTO,
   OtpDTO,
@@ -8,16 +8,15 @@ import {
   ResetPassDTO,
   updateProfileImgDTO,
   updateProfileDTO,
+  OtpDocResponseDTO
 } from "../../dtos/UserDTO";
 
 export interface IUserRepository {
   createUser(user: RegisterUserDTO): Promise<void>;
   findByEmail(email: string): Promise<UserEntity | null>;
   findById(id: string): Promise<UserEntity | null>;
-  // deleteUser(id:string) : Promise<boolean>;
-  // editDetails(id:string) : Promise<UserEntity>;
   saveOtp(data: SaveOtpDTO): Promise<void>;
-  findOtp(email: string): Promise<OtpEntity | null>;
+  findOtp(email: string): Promise<OtpDocResponseDTO | null>;
   deleteOtp(email: string): Promise<void>;
   markAsVerified(email: string): Promise<void>;
   updateRefreshToken(data: RefreshTokenDTO): Promise<UserEntity | null>;

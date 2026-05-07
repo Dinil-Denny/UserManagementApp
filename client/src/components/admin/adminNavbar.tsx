@@ -40,14 +40,14 @@ const AdminNavbar = () => {
           {(token && role === 'admin') ? (
             <div className="flex items-center gap-4">
               {/* Logout */}
-              <Button variant="outline" className="flex items-center gap-2" onClick={handleLogout}>
+              <Button variant="outline" className="flex items-center gap-2 cursor-pointer" onClick={handleLogout}>
                 <LogOut size={16} />
                 Logout
               </Button>
             </div>
           ) : (
             <Link to="/admin/login">
-            <Button className="flex items-center gap-2">
+            <Button className="flex items-center gap-2 cursor-pointer">
               <LogIn size={16} />
               Login
             </Button>
@@ -80,14 +80,14 @@ const AdminNavbar = () => {
 
           {(token && role === 'admin') ? (
             <>
-              <Button variant="outline" className="w-full flex gap-2" onClick={handleLogout}>
+              <Button variant="outline" className="w-full flex gap-2 cursor-pointer" onClick={handleLogout}>
                 <LogOut size={16} />
                 Logout
               </Button>
             </>
           ) : (
             <Link to="/admin/login">
-            <Button className="w-full flex gap-2">
+            <Button className="w-full flex gap-2 cursor-pointer">
               <LogIn size={16} />
               Login
             </Button>

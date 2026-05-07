@@ -44,3 +44,23 @@ export interface updateProfileDTO {
   username: string;
   profileImgURL?: string;
 }
+
+export interface OtpDocResponseDTO {
+  id: string | undefined;
+  email: string;
+  otp: string;
+  expiresAt: Date;
+  createdAt?: Date;
+  updatedAT?: Date;
+};
+
+export class OtpEntity {
+  constructor(
+    public id: string | undefined,
+    public email: string,
+    public otp: string,
+    public expiresAt: Date,
+    public createdAt?: Date,
+    public updatedAT?: Date,
+  ) {}
+}

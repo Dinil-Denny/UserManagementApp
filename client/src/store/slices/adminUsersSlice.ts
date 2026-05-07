@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@api/api";
+import { User } from "../../types/admin/adminSideTypes";
+import { toast } from "react-toastify";
+import { act } from "react";
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  profileImgURL?: string;
-  isBlocked: boolean;
-}
+// interface User {
+//   id: string;
+//   username: string;
+//   email: string;
+//   profileImgURL?: string;
+//   isBlocked: boolean;
+// }
 
 interface InitialState {
   users: User[];
@@ -23,17 +26,48 @@ const initialState: InitialState = {
   error: null,
 };
 
+//async thunk to fetch all users data
 export const fetchAllUsers = createAsyncThunk(
   "adminUsers/fetchAll", //name of this thunk
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/admin");
+      const response = await api.get("/admin/users");
       console.log("response data: ", response.data);
-      return response.data;
+      return response.data.users;
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to fetch users",
       );
+    }
+  },
+);
+//toggle user status - block/unblock
+export const toggleUserStatus = createAsyncThunk(
+  "adminUsers/toggleUserStatus",
+  async (
+    { id, isBlocked }: { id: string; isBlocked: boolean },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      await api.patch(`/admin/users/${id}/status`, { isBlocked });
+      //after updating the status fetch the updated users list
+      dispatch(fetchAllUsers());
+      return { id, isBlocked }; // this will be the action payload
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Update failed");
+    }
+  },
+);
+//delete user
+export const deleteUser = createAsyncThunk(
+  "adminUsers/delete",
+  async (id: string, { dispatch, rejectWithValue }) => {
+    try {
+      await api.delete(`/admin/user/${id}`);
+      dispatch(fetchAllUsers());
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.messgae || "Delete failed");
     }
   },
 );
@@ -51,20 +85,50 @@ const adminUsersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(fetchAllUsers.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchAllUsers.fulfilled, (state,action) => {
-      state.loading = false;
-      state.users = action.payload.users;
-      state.summary = action.payload.summery;
-    })
-    .addCase(fetchAllUsers.rejected, (state,action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    })
+      //for fetchAllUsers()
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log("action.payload:",action.payload);
+        state.users = action.payload.users;
+        state.summary = action.payload.summary;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        const errorMessage = action.payload as string;
+        state.error = errorMessage;
+        toast.error(errorMessage); //displaying error in toast notification
+      })
+      //for toggling user status
+      .addCase(toggleUserStatus.fulfilled, (state, action) => {
+        const { id, isBlocked } = action.payload;
+        const user = state.users.find((u: User) => u.id === id);
+        if (user) {
+          user.isBlocked = isBlocked;
+        }
+        state.error = null;
+      })
+      .addCase(toggleUserStatus.rejected, (state, action) => {
+        const errorMessage = action.payload as string;
+        state.error = errorMessage;
+        toast.error(errorMessage);
+      })
+      //deleting user
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        const id = action.payload; //id of deleted user
+        state.users = state.users.filter((u: User) => u.id !== id); //filtering out users other than deleted user
+        state.error = null;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        const errorMessage = action.payload as string;
+        state.error = errorMessage;
+        toast.error(errorMessage);
+      })
+      
   },
 });
 
-export const {updateUserStatusLocally} = adminUsersSlice.actions;
+export const { updateUserStatusLocally } = adminUsersSlice.actions;
 export default adminUsersSlice.reducer;
