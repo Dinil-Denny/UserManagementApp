@@ -5,4 +5,10 @@ export interface User {
   email: string;
   profileImgURL?: string;
   isBlocked: boolean;
-};
+}
+
+export interface AddUser {
+  username: string;
+  email: string;
+  password: string;
+}

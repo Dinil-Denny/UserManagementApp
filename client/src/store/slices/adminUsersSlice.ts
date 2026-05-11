@@ -1,8 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  isRejectedWithValue,
+} from "@reduxjs/toolkit";
 import api from "@api/api";
-import { User } from "../../types/admin/adminSideTypes";
+import { User, AddUser } from "../../types/admin/adminSideTypes";
 import { toast } from "react-toastify";
-import { act } from "react";
 
 // interface User {
 //   id: string;
@@ -41,6 +44,7 @@ export const fetchAllUsers = createAsyncThunk(
     }
   },
 );
+
 //toggle user status - block/unblock
 export const toggleUserStatus = createAsyncThunk(
   "adminUsers/toggleUserStatus",
@@ -58,12 +62,13 @@ export const toggleUserStatus = createAsyncThunk(
     }
   },
 );
+
 //delete user
 export const deleteUser = createAsyncThunk(
   "adminUsers/delete",
   async (id: string, { dispatch, rejectWithValue }) => {
     try {
-      await api.delete(`/admin/user/${id}`);
+      await api.delete(`/admin/user/${id}/delete`);
       dispatch(fetchAllUsers());
       return id;
     } catch (error: any) {
@@ -72,6 +77,38 @@ export const deleteUser = createAsyncThunk(
   },
 );
 
+//add new user
+export const addUser = createAsyncThunk(
+  "adminUsers/add",
+  async (userData: AddUser, { dispatch, rejectWithValue }) => {
+    try {
+      await api.post(`/admin/user/add`, userData);
+      dispatch(fetchAllUsers());
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to add user",
+      );
+    }
+  },
+);
+
+//edit user details
+export const updateUser = createAsyncThunk(
+  "adminUsers/update",
+  async (
+    { id, userData }: { id: string; userData: any },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      await api.put(`/admin/user/${id}/update`, userData);
+      dispatch(fetchAllUsers());
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.messgae || "Failed to update user details");
+    }
+  },
+);
 const adminUsersSlice = createSlice({
   name: "adminUsers",
   initialState,
@@ -91,7 +128,7 @@ const adminUsersSlice = createSlice({
       })
       .addCase(fetchAllUsers.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("action.payload:",action.payload);
+        console.log("action.payload:", action.payload);
         state.users = action.payload.users;
         state.summary = action.payload.summary;
       })
@@ -126,7 +163,6 @@ const adminUsersSlice = createSlice({
         state.error = errorMessage;
         toast.error(errorMessage);
       })
-      
   },
 });
 

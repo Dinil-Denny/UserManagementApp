@@ -39,7 +39,7 @@ const SkeletonTable = () => {
           {Array.from({ length: 7 }).map((_, index) => (
             <TableRow key={index}>
               <TableCell>
-                <Skeleton className="h-6 w-[120px]" />
+                <Skeleton className="h-6 w-30" />
               </TableCell>
               <TableCell>
                 <Skeleton className="h-6 w-24" />

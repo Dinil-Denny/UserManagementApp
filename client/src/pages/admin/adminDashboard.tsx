@@ -8,6 +8,7 @@ import StatCards from "@components/admin/summeryCards";
 import UsersTable from "@components/admin/userTable";
 import { Button } from '@components/ui/button'; 
 import { Plus } from 'lucide-react';
+import AddUserDialog from '@components/admin/addUserDialog';
 
 // interface User {
 //   _id: string;
@@ -70,9 +71,10 @@ const AdminDashboard = () => {
         </div>
         
         {/* We will trigger a Shadcn Dialog (Modal) from this button later */}
-        <Button className="bg-blue-600 hover:bg-blue-700 cursor-pointer">
+        {/* <Button className="bg-blue-600 hover:bg-blue-700 cursor-pointer">
           <Plus className="mr-2 h-4 w-4" /> Add User
-        </Button>
+        </Button> */}
+        <AddUserDialog/>
       </div>
       {/* STATS SECTION */}
       <div className="mb-8">

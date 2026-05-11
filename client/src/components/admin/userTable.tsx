@@ -36,13 +36,13 @@ interface UsersTableProps {
 
 const UsersTable = ({ users }: UsersTableProps) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  //handling toggle status
   const handleToggleStatus = (id: string, currentStatus: boolean) => {
     const isBlocked = !currentStatus;
-    dispatch(toggleUserStatus({id,isBlocked}));
+    dispatch(toggleUserStatus({ id, isBlocked }));
   };
-
-  const handleDeleteUser = (id:string) => {
+  //handling deleting user
+  const handleDeleteUser = (id: string) => {
     dispatch(deleteUser(id));
   };
 
@@ -84,7 +84,13 @@ const UsersTable = ({ users }: UsersTableProps) => {
               {/* TOGGLE SWITCH */}
               <TableCell>
                 {/* We will add the onChange handler to this switch later */}
-                <Switch className="cursor-pointer" checked={user.isBlocked} onCheckedChange={()=>handleToggleStatus(user.id,user.isBlocked)}/>
+                <Switch
+                  className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500 cursor-pointer"
+                  checked={!user.isBlocked}
+                  onCheckedChange={() =>
+                    handleToggleStatus(user.id, user.isBlocked)
+                  }
+                />
               </TableCell>
 
               {/* ACTION BUTTONS */}
@@ -99,7 +105,10 @@ const UsersTable = ({ users }: UsersTableProps) => {
                     <Edit2 className="w-4 h-4" />
                   </Button>
                   {/* delete button */}
-                  <DeleteUserDialog username={user.username} onConfirm={()=>handleDeleteUser(user.id)}/>
+                  <DeleteUserDialog
+                    username={user.username}
+                    onConfirm={() => handleDeleteUser(user.id)}
+                  />
                   {/* <Button
                     variant="ghost"
                     size="icon"
