@@ -38,4 +38,8 @@ export class AdminRepository implements IAdminRepository {
     console.log(`updating user status to - ${data.isBlocked}`);
     await UserModel.findByIdAndUpdate({_id:data.id},{$set:{isBlocked:data.isBlocked}});
   }
+  async deleteUser(id:string):Promise<void>{
+    console.log('deleting user id: ',id);
+    await UserModel.findOneAndDelete({_id:id});
+  }
 }

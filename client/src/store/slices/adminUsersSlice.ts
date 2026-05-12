@@ -72,8 +72,9 @@ export const deleteUser = createAsyncThunk(
     console.log('delete user thunk called');
     try {
       console.log(`id:${id} - to delete`);
-      await api.delete(`/admin/user/${id}/delete`);
+      const response = await api.delete(`/admin/user/${id}/delete`);
       dispatch(fetchAllUsers());
+      toast.success(response.data.message);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.messgae || "Delete failed");

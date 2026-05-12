@@ -19,5 +19,6 @@ router.use((req, res, next) => {
 
 router.get("/users", authMiddleware, roleMiddleware("admin"), adminController.fetchAllUsers);
 router.patch("/users/:id/status", authMiddleware, roleMiddleware("admin"), adminController.toggleUserStatus);
+router.delete("/user/:id/delete",authMiddleware, roleMiddleware("admin"), adminController.deleteUser);
 
 export default router;
