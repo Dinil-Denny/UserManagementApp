@@ -1,6 +1,7 @@
 import { UserModel } from "../../models/user/userSchema";
 import { IAdminRepository } from "../../interfaces/repository-interfaces/IAdminRepository";
-import { IUsersResponseDTO } from "../../dtos/adminDTO";
+import { IUsersResponseDTO, IToggleStautsDTO } from "../../dtos/adminDTO";
+import id from "zod/v4/locales/id.js";
 
 export class AdminRepository implements IAdminRepository {
   async fetchAllUsers(): Promise<IUsersResponseDTO[]> {
@@ -32,5 +33,9 @@ export class AdminRepository implements IAdminRepository {
   async fetchBlockedUsersCount(): Promise<number> {
     console.log("fetching blocked users");
     return await UserModel.countDocuments({ role: "user", isBlocked: true });
+  }
+  async updateUserStauts(data:IToggleStautsDTO):Promise<void>{
+    console.log(`updating user status to - ${data.isBlocked}`);
+    await UserModel.findByIdAndUpdate({_id:data.id},{$set:{isBlocked:data.isBlocked}});
   }
 }

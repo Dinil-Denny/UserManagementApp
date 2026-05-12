@@ -52,8 +52,10 @@ export const toggleUserStatus = createAsyncThunk(
     { id, isBlocked }: { id: string; isBlocked: boolean },
     { dispatch, rejectWithValue },
   ) => {
+    console.log(`id:${id},isBlocked:${isBlocked} - toggleUserStatus adminUserSlice`);
     try {
-      await api.patch(`/admin/users/${id}/status`, { isBlocked });
+      const response = await api.patch(`/admin/users/${id}/status`, { isBlocked });
+      toast.success(response.data.message);
       //after updating the status fetch the updated users list
       dispatch(fetchAllUsers());
       return { id, isBlocked }; // this will be the action payload
@@ -67,7 +69,9 @@ export const toggleUserStatus = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   "adminUsers/delete",
   async (id: string, { dispatch, rejectWithValue }) => {
+    console.log('delete user thunk called');
     try {
+      console.log(`id:${id} - to delete`);
       await api.delete(`/admin/user/${id}/delete`);
       dispatch(fetchAllUsers());
       return id;
@@ -100,7 +104,9 @@ export const updateUser = createAsyncThunk(
     { id, userData }: { id: string; userData: any },
     { dispatch, rejectWithValue },
   ) => {
+    console.log('updateUser thunk called');
     try {
+      console.log(`id:${id}, userData:${userData} - update user`);
       await api.put(`/admin/user/${id}/update`, userData);
       dispatch(fetchAllUsers());
       return true;

@@ -97,7 +97,7 @@ const AddUserDialog = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Temporary Password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="******" {...field} />
                   </FormControl>

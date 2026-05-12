@@ -13,6 +13,7 @@ import { Edit2, Trash2 } from "lucide-react";
 import StatusBadge from "./statusBadge";
 import { User } from "../../types/admin/adminSideTypes";
 import DeleteUserDialog from "./deleteUserDialog";
+import EditUserDialog from "./editUserDialog";
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
@@ -38,6 +39,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
   const dispatch = useDispatch<AppDispatch>();
   //handling toggle status
   const handleToggleStatus = (id: string, currentStatus: boolean) => {
+    console.log(`toggled id: ${id}, current status: ${currentStatus}`);
     const isBlocked = !currentStatus;
     dispatch(toggleUserStatus({ id, isBlocked }));
   };
@@ -97,13 +99,14 @@ const UsersTable = ({ users }: UsersTableProps) => {
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   {/* edit button */}
-                  <Button
+                  <EditUserDialog key={user.id} id={user.id} email={user.email} username={user.username}/>
+                  {/* <Button
                     variant="ghost"
                     size="icon"
                     className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 cursor-pointer"
                   >
                     <Edit2 className="w-4 h-4" />
-                  </Button>
+                  </Button> */}
                   {/* delete button */}
                   <DeleteUserDialog
                     username={user.username}

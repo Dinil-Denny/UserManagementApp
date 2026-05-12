@@ -19,6 +19,12 @@ export interface IFetchAllUsersResponseDTO {
   };
 }
 
+//DTO for sending id and status to toggle user status
+export interface IToggleStautsDTO{
+  id:string;
+  isBlocked:boolean;
+}
+
 // export class UserEntity{
 //     constructor(
 //         public id : string | undefined,
