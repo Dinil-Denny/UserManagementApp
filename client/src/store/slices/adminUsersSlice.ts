@@ -77,7 +77,7 @@ export const deleteUser = createAsyncThunk(
       toast.success(response.data.message);
       return id;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.messgae || "Delete failed");
+      return rejectWithValue(error.response?.data?.message || "Delete failed");
     }
   },
 );
@@ -105,14 +105,15 @@ export const updateUser = createAsyncThunk(
     { id, userData }: { id: string; userData: any },
     { dispatch, rejectWithValue },
   ) => {
-    console.log('updateUser thunk called');
+    console.log('updateUser thunk called:',id,userData);
     try {
       console.log(`id:${id}, userData:${userData} - update user`);
-      await api.put(`/admin/user/${id}/update`, userData);
+      const response = await api.patch(`/admin/user/${id}/update`, userData);
+      toast.success(response.data.message);
       dispatch(fetchAllUsers());
       return true;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.messgae || "Failed to update user details");
+      return rejectWithValue(error.response?.data?.message || "Failed to update user details");
     }
   },
 );

@@ -1,5 +1,5 @@
 import { UserEntity } from "../../entities/UserEntity";
-import { IUsersResponseDTO, IToggleStautsDTO } from "../../dtos/adminDTO";
+import { IUsersResponseDTO, IToggleStautsDTO, IUpdateUserDTO } from "../../dtos/adminDTO";
 
 export interface IAdminRepository {
   fetchAllUsers(): Promise<IUsersResponseDTO[]>;
@@ -8,4 +8,5 @@ export interface IAdminRepository {
   fetchBlockedUsersCount(): Promise<number>;
   updateUserStauts(data: IToggleStautsDTO): Promise<void>;
   deleteUser(id: string): Promise<void>;
+  updateUser(data:IUpdateUserDTO):Promise<void>;
 }

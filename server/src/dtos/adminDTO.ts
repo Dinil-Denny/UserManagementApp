@@ -25,6 +25,13 @@ export interface IToggleStautsDTO{
   isBlocked:boolean;
 }
 
+//DTO for sending data to update user
+export interface IUpdateUserDTO{
+  id:string;
+  username:string;
+  email:string;
+}
+
 // export class UserEntity{
 //     constructor(
 //         public id : string | undefined,

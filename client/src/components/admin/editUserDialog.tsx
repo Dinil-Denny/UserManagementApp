@@ -56,6 +56,7 @@ const EditUserDialog = (userDetails: IEditUserProps) => {
 
   //submit handler
   const onSubmit = async(data:IEditUserFormInput) => {
+    console.log(`submitted data: ${data}`);
     const result = await dispatch(updateUser({id:userDetails.id,userData:data}));
     if(updateUser.fulfilled.match(result)){
         setOpen(false); //close on successfull submission

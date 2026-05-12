@@ -1,6 +1,6 @@
 import { UserModel } from "../../models/user/userSchema";
 import { IAdminRepository } from "../../interfaces/repository-interfaces/IAdminRepository";
-import { IUsersResponseDTO, IToggleStautsDTO } from "../../dtos/adminDTO";
+import { IUsersResponseDTO, IToggleStautsDTO, IUpdateUserDTO } from "../../dtos/adminDTO";
 import id from "zod/v4/locales/id.js";
 
 export class AdminRepository implements IAdminRepository {
@@ -41,5 +41,9 @@ export class AdminRepository implements IAdminRepository {
   async deleteUser(id:string):Promise<void>{
     console.log('deleting user id: ',id);
     await UserModel.findOneAndDelete({_id:id});
+  }
+  async updateUser(data:IUpdateUserDTO):Promise<void>{
+    console.log('data to update: ',data);
+    await UserModel.findByIdAndUpdate({_id:data.id},{$set:{username:data.username,email:data.email}});
   }
 }

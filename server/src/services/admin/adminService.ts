@@ -4,6 +4,7 @@ import { IAdminService } from "../../interfaces/service-interfaces/IAdminService
 import {
   IFetchAllUsersResponseDTO,
   IToggleStautsDTO,
+  IUpdateUserDTO,
 } from "../../dtos/adminDTO";
 
 export class AdminService implements IAdminService {
@@ -38,5 +39,10 @@ export class AdminService implements IAdminService {
   //delete user
   async deleteUser(id: string): Promise<void> {
     await this.adminRepository.deleteUser(id);
+  }
+
+  //update user
+  async updateUser(data:IUpdateUserDTO): Promise<void>{
+    await this.adminRepository.updateUser(data);
   }
 }
