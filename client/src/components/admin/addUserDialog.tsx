@@ -37,14 +37,14 @@ const AddUserDialog = () => {
   });
 
   const onSubmit = async (data: AddUserInput) => {
-    // dispatch() returns a promise. We unwrap it to see if it succeeded or threw an error.
-    const result = await dispatch(addUser(data));
-    if (addUser.fulfilled.match(result)) {
+    // dispatch() returns a promise. We unwrap it to see if it succeeded or threw an error. unwrap()  method is used to extract the raw result or error from a dispatched async thunk.
+    try {
+      const result = await dispatch(addUser(data)).unwrap();
+      console.log(`result from addUser dialog component: ${result}`);
       form.reset(); //clear the form
       setOpen(false); //close the dialog
-    } else {
-      console.log("failed to add user");
-      toast.error("Failed to add user");
+    } catch (error:any) {
+      toast.error(error);
     }
   };
 

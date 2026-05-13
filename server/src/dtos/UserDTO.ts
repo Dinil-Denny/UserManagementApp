@@ -2,7 +2,6 @@ export interface RegisterUserDTO {
   username: string;
   email: string;
   password: string;
-  //these are for google auth login
   profileImgURL?: string;
   isGoogleAuth?: boolean;
   isVerified?: boolean;

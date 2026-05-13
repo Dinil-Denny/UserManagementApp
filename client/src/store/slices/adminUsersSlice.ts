@@ -20,6 +20,8 @@ interface InitialState {
   summary: { total: number; active: number; blocked: number };
   loading: boolean;
   error: string | null;
+  fetchError: string | null,  // For the initial table load
+  // actionError: null, // For addUser, deleteUser, etc.
 }
 
 const initialState: InitialState = {
@@ -27,6 +29,7 @@ const initialState: InitialState = {
   summary: { total: 0, active: 0, blocked: 0 },
   loading: false,
   error: null,
+  fetchError: null,
 };
 
 //async thunk to fetch all users data
@@ -57,7 +60,7 @@ export const toggleUserStatus = createAsyncThunk(
       const response = await api.patch(`/admin/users/${id}/status`, { isBlocked });
       toast.success(response.data.message);
       //after updating the status fetch the updated users list
-      dispatch(fetchAllUsers());
+      await dispatch(fetchAllUsers());
       return { id, isBlocked }; // this will be the action payload
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Update failed");
@@ -73,7 +76,7 @@ export const deleteUser = createAsyncThunk(
     try {
       console.log(`id:${id} - to delete`);
       const response = await api.delete(`/admin/user/${id}/delete`);
-      dispatch(fetchAllUsers());
+      await dispatch(fetchAllUsers());
       toast.success(response.data.message);
       return id;
     } catch (error: any) {
@@ -87,13 +90,14 @@ export const addUser = createAsyncThunk(
   "adminUsers/add",
   async (userData: AddUser, { dispatch, rejectWithValue }) => {
     try {
-      await api.post(`/admin/user/add`, userData);
-      dispatch(fetchAllUsers());
+      const response = await api.post(`/admin/user/add`, userData);
+      toast.success(response.data.message);
+      await dispatch(fetchAllUsers());
       return true;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to add user",
-      );
+      const message = error.response?.data?.message || "Failed to add user";
+      console.log(`error message while adding user: ${message}`);
+      return rejectWithValue(message);
     }
   },
 );
@@ -110,7 +114,7 @@ export const updateUser = createAsyncThunk(
       console.log(`id:${id}, userData:${userData} - update user`);
       const response = await api.patch(`/admin/user/${id}/update`, userData);
       toast.success(response.data.message);
-      dispatch(fetchAllUsers());
+      await dispatch(fetchAllUsers());
       return true;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Failed to update user details");
@@ -143,11 +147,15 @@ const adminUsersSlice = createSlice({
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;
         const errorMessage = action.payload as string;
-        state.error = errorMessage;
+        state.fetchError = errorMessage;
         toast.error(errorMessage); //displaying error in toast notification
       })
       //for toggling user status
+      .addCase(toggleUserStatus.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(toggleUserStatus.fulfilled, (state, action) => {
+        state.loading = false;
         const { id, isBlocked } = action.payload;
         const user = state.users.find((u: User) => u.id === id);
         if (user) {
@@ -156,21 +164,55 @@ const adminUsersSlice = createSlice({
         state.error = null;
       })
       .addCase(toggleUserStatus.rejected, (state, action) => {
+        state.loading = false
         const errorMessage = action.payload as string;
         state.error = errorMessage;
         toast.error(errorMessage);
       })
       //deleting user
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
         const id = action.payload; //id of deleted user
         state.users = state.users.filter((u: User) => u.id !== id); //filtering out users other than deleted user
         state.error = null;
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.loading =false;
         const errorMessage = action.payload as string;
         state.error = errorMessage;
         toast.error(errorMessage);
       })
+      //adding new user
+      // .addCase(addUser.pending, (state) => {
+      //   state.loading = true;
+      // })
+      // .addCase(addUser.fulfilled, (state) => {
+      //   state.loading = false;
+      //   state.error = null;
+      // })
+      // .addCase(addUser.rejected,(state,action) => {
+      //   state.loading = false;
+      //   const errorMessage = action.payload as string;
+      //   state.error = errorMessage;
+      //   toast.error(errorMessage);
+      // })
+      //editing user details
+      // .addCase(updateUser.pending,(state) => {
+      //   state.loading = true;
+      // })
+      // .addCase(updateUser.fulfilled, (state) => {
+      //   state.loading = false;
+      //   state.error = null;
+      // })
+      // .addCase(updateUser.rejected, (state, action) => {
+      //   state.loading = false;
+      //   const errorMessage = action.payload as string;
+      //   state.error = errorMessage;
+      //   toast.error(errorMessage);
+      // })
   },
 });
 

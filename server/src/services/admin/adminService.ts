@@ -6,6 +6,9 @@ import {
   IToggleStautsDTO,
   IUpdateUserDTO,
 } from "../../dtos/adminDTO";
+import { RegisterUserDTO } from "../../dtos/UserDTO";
+import { AppError } from "../../utils/AppError";
+import bcrypt from "bcrypt";
 
 export class AdminService implements IAdminService {
   constructor(private adminRepository: IAdminRepository) {}
@@ -42,7 +45,20 @@ export class AdminService implements IAdminService {
   }
 
   //update user
-  async updateUser(data:IUpdateUserDTO): Promise<void>{
+  async updateUser(data: IUpdateUserDTO): Promise<void> {
     await this.adminRepository.updateUser(data);
+  }
+
+  //add new user
+  async addUser(data: RegisterUserDTO): Promise<void> {
+    const { username, email, password } = data;
+    const userExist = await this.adminRepository.findByEmail(email);
+    if (userExist) throw new AppError("User already registered", 409);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await this.adminRepository.createUser({
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
   }
 }

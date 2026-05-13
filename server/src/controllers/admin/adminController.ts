@@ -54,16 +54,28 @@ export class AdminController {
     }
   };
 
-  //update user 
+  //update user
   updateUser = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      console.log(req.params,req.body)
+      console.log(req.params, req.body);
       const id = req.params.id as string;
-      const {username,email} = req.body;
-      await this.adminService.updateUser({id,username,email});
-      res.status(200).json({message:"User data updated"});
-    } catch (error:any) {
+      const { username, email } = req.body;
+      await this.adminService.updateUser({ id, username, email });
+      res.status(200).json({ message: "User data updated" });
+    } catch (error: any) {
       next(error);
     }
-  }
+  };
+
+  //add new user
+  addNewUser = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      console.log("req.body in adding new user controller:", req.body);
+      const { username, email, password } = req.body;
+      await this.adminService.addUser({ username, email, password });
+      res.status(200).json({message:"User added"});
+    } catch (error: any) {
+      next(error);
+    }
+  };
 }

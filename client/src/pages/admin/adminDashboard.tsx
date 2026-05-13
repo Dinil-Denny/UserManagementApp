@@ -6,8 +6,6 @@ import { fetchAllUsers } from '../../store/slices/adminUsersSlice';
 import SkeletonTable from '@components/admin/tableSkeleton';
 import StatCards from "@components/admin/summeryCards";
 import UsersTable from "@components/admin/userTable";
-import { Button } from '@components/ui/button'; 
-import { Plus } from 'lucide-react';
 import AddUserDialog from '@components/admin/addUserDialog';
 
 // interface User {
@@ -18,46 +16,15 @@ import AddUserDialog from '@components/admin/addUserDialog';
 //   isActive: boolean;
 // }
 
-// const userlist : User[] = [
-//   {
-//     _id:'1',
-//     username:'Dinil',
-//     email:'email@gmail.com',
-//     profileImgURL : '',
-//     isActive:true,
-//   },
-//     {
-//     _id:'2',
-//     username:'Amal',
-//     email:'email@gmail.com',
-//     profileImgURL : '',
-//     isActive:false,
-//   },
-//     {
-//     _id:'3',
-//     username:'Babu',
-//     email:'email@gmail.com',
-//     profileImgURL : '',
-//     isActive:false,
-//   },
-//     {
-//     _id:'4',
-//     username:'Sunil',
-//     email:'email@gmail.com',
-//     profileImgURL : '',
-//     isActive:true,
-//   },
-// ]
-
 const AdminDashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {users,summary,loading,error} = useSelector((state:RootState) => state.adminUsers);
+  const {users,summary,loading,error,fetchError} = useSelector((state:RootState) => state.adminUsers);
   console.log('users in state:',users);
   console.log('summery in state:',summary);
 
   //fetching users when component mounts
   useEffect(()=>{
-    dispatch(fetchAllUsers())
+    dispatch(fetchAllUsers());
   },[dispatch]);
 
   
@@ -90,9 +57,11 @@ const AdminDashboard = () => {
         
         {loading ? (
           <SkeletonTable/>
-        ) : error ? (
-          <div className="p-8 text-center text-red-500">{error}</div>
-        ) : (
+        ) 
+        : fetchError ? (
+          <div className="p-8 text-center text-red-500">{fetchError}</div>
+        ) 
+        : (
           <UsersTable users={users} />
         )}
       </div>
