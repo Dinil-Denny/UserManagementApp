@@ -42,6 +42,7 @@ export interface updateProfileDTO {
   id: string;
   username: string;
   profileImgURL?: string;
+  profileImgId?: string;
 }
 
 export interface OtpDocResponseDTO {

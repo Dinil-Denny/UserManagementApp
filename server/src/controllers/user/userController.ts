@@ -190,7 +190,7 @@ export class UserController {
 
   editProfile = async(req:AuthRequest,res:Response,next:NextFunction) => {
     try {
-      console.log('req.boy in editProfile - controller:',req.body);
+      console.log('req.body in editProfile - controller:',req.body);
       console.log("req.user - edit profile controller",req.user);
       const id = req.user?.id;
       const {username} = req.body;
@@ -198,8 +198,9 @@ export class UserController {
       const updatedData: any = {username};
       // If a new file was uploaded, Multer puts the Cloudinary URL in req.file.path
       if(req.file){
-        console.log('req.file.path:',req.file.path);
+        console.log(`req.file.path:${req.file.path}, req.file.filename(imageId):${req.file.filename}`);
         updatedData.profileImgURL = req.file.path;
+        updatedData.profileImgId = req.file.filename;
       };
       console.log('updated Data:',updatedData);
       const data:updateProfileDTO = {id,...updatedData};

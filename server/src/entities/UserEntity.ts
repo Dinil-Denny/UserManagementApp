@@ -10,6 +10,7 @@ export class UserEntity{
         public isVerified : boolean,
         public isGoogleAuth: boolean,
         public profileImgURL ?: string,
+        public profileImgId ?: string, //added-------------
         public createdAt ?: Date,
         public updatedAT ?: Date,
         public refreshToken ?: string,

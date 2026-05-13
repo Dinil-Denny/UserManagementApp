@@ -1,4 +1,5 @@
 import {v2 as cloudinary} from "cloudinary";
+//multer-storage-cloudinary library automatically attaches the Cloudinary metadata to the req.file object after the upload is successful.
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from 'multer';
 import dotenv from "dotenv";

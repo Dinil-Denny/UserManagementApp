@@ -6,7 +6,7 @@ import {
   RefreshTokenDTO,
   ResetPassDTO,
   updateProfileDTO,
-  OtpDocResponseDTO
+  OtpDocResponseDTO,
 } from "../../dtos/UserDTO";
 import { UserEntity } from "../../entities/UserEntity";
 import { IUserRepository } from "../../interfaces/repository-interfaces/IUserRepository";
@@ -20,6 +20,7 @@ import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { googleClient } from "../../config/googleClient";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
@@ -97,24 +98,24 @@ export class UserService implements IUserService {
       });
     }
     const user = await this.userRepository.findByEmail(email);
-    console.log('user-googleAuth-service:',user);
+    console.log("user-googleAuth-service:", user);
     //generate access token and refresh token
     const accessToken = generateAccessToken({
       id: user!.id,
       role: user!.role,
     });
-    console.log('created access token-googleAuth')
+    console.log("created access token-googleAuth");
     const refreshToken = generateRefreshToken(user!.id);
     //update the refresh token in db
     const refreshTokenUpdateData: RefreshTokenDTO = {
       id: user!.id,
       token: refreshToken,
     };
-    console.log('created refresh token - googleAuth')
+    console.log("created refresh token - googleAuth");
     const updatedUser = await this.userRepository.updateRefreshToken(
       refreshTokenUpdateData,
     );
-    console.log('updated user - googleAuth')
+    console.log("updated user - googleAuth");
     return { updatedUser, accessToken, refreshToken };
   }
 
@@ -270,13 +271,19 @@ export class UserService implements IUserService {
     return newAccessToken;
   }
 
-  async editProfile(data:updateProfileDTO):Promise<UserEntity>{
-    const updatedUserData = await this.userRepository.updateProfile(data)
-    console.log('updated user profile data: ',updatedUserData);
-    if(updatedUserData){
+  async editProfile(data: updateProfileDTO): Promise<UserEntity> {
+    const { id } = data;
+    const user = await this.userRepository.findById(id);
+    if (user?.profileImgId) {
+      await cloudinary.uploader.destroy(user.profileImgId);
+      console.log("deleted old profile image");
+    }
+    const updatedUserData = await this.userRepository.updateProfile(data);
+    console.log("updated user profile data: ", updatedUserData);
+    if (updatedUserData) {
       return updatedUserData;
-    }else{
-      throw new AppError('User not found!',404);
+    } else {
+      throw new AppError("User not found!", 404);
     }
   }
 }

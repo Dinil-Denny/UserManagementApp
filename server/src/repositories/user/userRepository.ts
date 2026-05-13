@@ -111,11 +111,14 @@ export class UserRepository implements IUserRepository {
   //update user profile
   async updateProfile(data:updateProfileDTO): Promise<UserEntity | null>{
     console.log('data in updateProfile - repository:',data);
-    const {id,username,profileImgURL} = data;
-    const dataToUpdate: {username: string; profileImgURL?: string} = {username};
+    const {id,username,profileImgURL,profileImgId} = data;
+    const dataToUpdate: {username: string; profileImgURL?: string, profileImgId?: string} = {username};
     if(profileImgURL !== undefined){
       dataToUpdate.profileImgURL = profileImgURL;
     };
+    if(profileImgId !== undefined){
+      dataToUpdate.profileImgId = profileImgId;
+    }
     return await UserModel.findByIdAndUpdate(id,{$set:dataToUpdate},{ returnDocument: 'after' });
   }
 }
