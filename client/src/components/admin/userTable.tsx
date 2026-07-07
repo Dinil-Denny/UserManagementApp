@@ -8,8 +8,6 @@ import {
 } from "@components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
 import { Switch } from "@components/ui/switch";
-import { Button } from "@components/ui/button";
-import { Edit2, Trash2 } from "lucide-react";
 import StatusBadge from "./statusBadge";
 import { User } from "../../types/admin/adminSideTypes";
 import DeleteUserDialog from "./deleteUserDialog";
@@ -21,15 +19,6 @@ import {
   deleteUser,
   toggleUserStatus,
 } from "../../store/slices/adminUsersSlice";
-
-// We define the shape of a User here temporarily for the UI
-// interface User {
-//   id: string;
-//   username: string;
-//   email: string;
-//   profileImgURL?: string;
-//   isBlocked: boolean;
-// }
 
 interface UsersTableProps {
   users: User[];
@@ -85,7 +74,6 @@ const UsersTable = ({ users }: UsersTableProps) => {
 
               {/* TOGGLE SWITCH */}
               <TableCell>
-                {/* We will add the onChange handler to this switch later */}
                 <Switch
                   className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500 cursor-pointer"
                   checked={!user.isBlocked}
